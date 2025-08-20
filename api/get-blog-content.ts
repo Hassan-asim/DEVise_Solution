@@ -36,7 +36,10 @@ ${markdownContent}`;
   }
 
   const jsonString = match[1];
-  const generatedContent = JSON.parse(jsonString);
+  let cleanedJsonString = jsonString.replace(/\n/g, '\n')
+                                    .replace(/\t/g, '\t')
+                                    .replace(/\r/g, '\r');
+  const generatedContent = JSON.parse(cleanedJsonString);
 
   fs.writeFileSync(generatedFilePath, JSON.stringify(generatedContent, null, 2), 'utf8');
 
