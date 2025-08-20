@@ -27,7 +27,11 @@ ${markdownContent}`;
   const result = await model.generateContent(prompt);
   let text = result.response.text();
 
-  const jsonRegex = /```json\n({[\s\S]*?})\n```/;
+  const jsonRegex = /```json
+({
+  [\s\S]*?
+})
+```/;
   const match = text.match(jsonRegex);
 
   if (!match || !match[1]) {
