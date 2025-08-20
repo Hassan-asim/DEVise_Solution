@@ -15,6 +15,7 @@ async function generateAndSaveBlog(slug: string) {
 
   const prompt = `Please rewrite the following blog post in a more engaging and modern style.
 Return the output as a JSON object inside a markdown code block with the language set to json.
+Ensure all string values within the JSON are properly escaped according to JSON standards.
 - "title": The title of the blog post.
 - "imageUrl": A relevant image URL found on the internet.
 - "introduction": A short introduction.
