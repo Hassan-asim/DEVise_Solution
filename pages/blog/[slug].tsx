@@ -21,12 +21,17 @@ const BlogPost: React.FC = () => {
       try {
         const response = await fetch(`/api/get-blog-content?slug=${slug}`);
         if (!response.ok) {
-          throw new Error('Failed to fetch blog content');
+          const errorText = await response.text();
+          throw new Error(`Failed to fetch blog content: ${errorText}`);
         }
         const data: BlogData = await response.json();
         setBlogData(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An unknown error occurred');
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('An unknown error occurred');
+        }
       }
     };
 

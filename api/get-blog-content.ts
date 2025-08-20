@@ -63,7 +63,8 @@ export default async function handler(
       return response.status(200).json(generatedContent);
     }
   } catch (error) {
-    console.error(error);
-    return response.status(500).send("Failed to process blog post");
+    console.error("Error in get-blog-content handler:", error);
+    const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
+    return response.status(500).send(`Failed to process blog post: ${errorMessage}`);
   }
 }
