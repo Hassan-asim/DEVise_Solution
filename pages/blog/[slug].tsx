@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
 import AnimatedSection from '../../components/AnimatedSection';
 
-interface BlogPost {
+interface BlogData {
   title: string;
   imageUrl: string;
   introduction: string;
@@ -10,85 +11,87 @@ interface BlogPost {
   references: { text: string; url: string }[];
 }
 
-const BlogPostPage: React.FC = () => {
+const BlogPost: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
-  const [post, setPost] = useState<BlogPost | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [blogData, setBlogData] = useState<BlogData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchPost = async () => {
+    const fetchBlogContent = async () => {
       try {
-        const contentResponse = await fetch(`/api/get-blog-content?slug=${slug}`);
-        if (!contentResponse.ok) {
-          throw new Error('Blog post content not found');
+        const response = await fetch(`/api/get-blog-content?slug=${slug}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch blog content');
         }
-        const markdownContent = await contentResponse.text();
-
-        const apiResponse = await fetch('/api/generate-blog', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ markdownContent }),
-        });
-
-        if (!apiResponse.ok) {
-          throw new Error('Failed to generate blog post');
-        }
-
-        const data = await apiResponse.json();
-        setPost(data);
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
+        const data: BlogData = await response.json();
+        setBlogData(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An unknown error occurred');
       }
     };
 
     if (slug) {
-      fetchPost();
+      fetchBlogContent();
     }
   }, [slug]);
 
-  if (isLoading) {
-    return <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 text-center">Loading...</div>;
-  }
-
   if (error) {
-    return <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 text-center text-red-500">{error}</div>;
+    return <div className="text-red-500 text-center py-10">Error: {error}</div>;
   }
 
-  if (!post) {
-    return <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 text-center">Blog post not found</div>;
+  if (!blogData) {
+    return <div className="text-center py-10">Loading...</div>;
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-      <AnimatedSection>
-        <article>
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary-dark to-secondary-dark dark:from-primary-light dark:to-secondary-light text-center">
-            {post.title}
-          </h1>
-          <img src={post.imageUrl} alt={post.title} className="mt-8 rounded-lg shadow-lg w-full" />
-          <div className="mt-8 prose lg:prose-xl max-w-none">
-            <p className="lead">{post.introduction}</p>
-            <div dangerouslySetInnerHTML={{ __html: post.body }} />
-            <h2 className="text-2xl font-bold mt-8">References</h2>
-            <ul>
-              {post.references.map((ref, index) => (
-                <li key={index}>
-                  <a href={ref.url} target="_blank" rel="noopener noreferrer" className="text-primary-DEFAULT hover:underline">
-                    {ref.text}
-                  </a>
-                </li>
-              ))}
-            </ul>
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <article className="max-w-4xl mx-auto">
+        <AnimatedSection>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-center mb-4">{blogData.title}</h1>
+        </AnimatedSection>
+
+        <AnimatedSection>
+          <img src={blogData.imageUrl} alt={blogData.title} className="w-full h-auto object-cover rounded-lg shadow-lg my-8" />
+        </AnimatedSection>
+
+        <AnimatedSection>
+          <p className="text-xl text-light-text-secondary dark:text-dark-text-secondary mb-8">{blogData.introduction}</p>
+        </AnimatedSection>
+
+        <AnimatedSection>
+          <div className="prose prose-lg max-w-none">
+            <ReactMarkdown
+              components={{
+                h1: ({node, ...props}) => <h1 className="text-3xl font-bold my-4" {...props} />,
+                h2: ({node, ...props}) => <h2 className="text-2xl font-bold my-4" {...props} />,
+                p: ({node, ...props}) => <p className="my-4" {...props} />,
+                a: ({node, ...props}) => <a className="text-primary-dark dark:text-primary-light hover:underline" {...props} />,
+              }}
+            >
+              {blogData.body}
+            </ReactMarkdown>
           </div>
-        </article>
-      </AnimatedSection>
+        </AnimatedSection>
+
+        {blogData.references && blogData.references.length > 0 && (
+          <AnimatedSection>
+            <div className="mt-12">
+              <h2 className="text-2xl font-bold mb-4">References</h2>
+              <ul className="list-disc list-inside">
+                {blogData.references.map((ref, index) => (
+                  <li key={index}>
+                    <a href={ref.url} target="_blank" rel="noopener noreferrer" className="text-primary-dark dark:text-primary-light hover:underline">
+                      {ref.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </AnimatedSection>
+        )}
+      </article>
     </div>
   );
 };
 
-export default BlogPostPage;
+export default BlogPost;
