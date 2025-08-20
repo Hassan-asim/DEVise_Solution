@@ -6,7 +6,7 @@ const About: React.FC = () => {
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
       <AnimatedSection className="text-center">
-        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">About DEVise Solutions</h1>
+        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary-dark to-secondary-dark dark:from-primary-light dark:to-secondary-light">About DEVise Solutions</h1>
         <p className="mt-4 max-w-3xl mx-auto text-lg text-light-text-secondary dark:text-dark-text-secondary">
           Fusing innovation with execution to build the future of software.
         </p>
@@ -57,7 +57,7 @@ const About: React.FC = () => {
          <div className="mt-8">
             <Link
                 to="/founders"
-                className="inline-block px-8 py-3 font-semibold rounded-md shadow-lg text-white bg-gradient-to-r from-primary-DEFAULT to-secondary-DEFAULT bg-[size:200%] hover:bg-[position:100%_center] focus:ring-2 focus:ring-offset-2 focus:ring-primary-light dark:focus:ring-offset-dark-bg transition-all duration-500 transform hover:scale-105"
+                className="inline-block px-8 py-3 bg-light-bg-secondary dark:bg-dark-bg-secondary font-semibold rounded-md shadow-lg text-light-text dark:text-dark-text hover:ring-2 hover:ring-primary-DEFAULT transition-all transform hover:scale-105"
             >
                 Meet Our Founders
             </Link>

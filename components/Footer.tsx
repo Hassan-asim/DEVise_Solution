@@ -85,7 +85,7 @@ const Footer: React.FC = () => {
               <div className="flex justify-between items-center">
                  <button
                   type="submit"
-                  className="px-6 py-2 font-semibold rounded-md shadow-lg text-white bg-gradient-to-r from-primary-DEFAULT to-secondary-DEFAULT bg-[size:200%] hover:bg-[position:100%_center] focus:ring-2 focus:ring-offset-2 focus:ring-primary-light dark:focus:ring-offset-dark-bg transition-all duration-500 transform hover:scale-105"
+                  className="inline-block px-8 py-3 bg-light-bg-secondary dark:bg-dark-bg-secondary font-semibold rounded-md shadow-lg hover:ring-2 hover:ring-primary-DEFAULT transition-all transform hover:scale-105"
                 >
                   Send Message
                 </button>
@@ -93,9 +93,6 @@ const Footer: React.FC = () => {
               </div>
             </form>
           </div>
-        </div>
-        <div className="mt-12 border-t border-slate-200 dark:border-slate-800 pt-8 text-center text-sm text-light-text-secondary dark:text-dark-text-secondary">
-          <p>&copy; {new Date().getFullYear()} DEVise Solutions. All rights reserved.</p>
         </div>
       </div>
     </footer>

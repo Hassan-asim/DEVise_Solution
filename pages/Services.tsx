@@ -16,7 +16,7 @@ const Services: React.FC = () => {
         {SERVICES.map((service, index) => (
           <AnimatedSection key={service.title}>
             <div className={`flex flex-col md:flex-row items-center gap-8 md:gap-12 ${index % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
-              <div className="md:w-1/2 p-8 flex justify-center items-center bg-light-bg-secondary dark:bg-dark-bg-secondary rounded-lg shadow-lg relative group overflow-hidden">
+              <div className="md:w-1/2 p-8 flex justify-center items-center bg-charcoal dark:bg-light-bg-secondary rounded-lg shadow-lg relative group overflow-hidden border border-primary-DEFAULT hover:shadow-2xl hover:shadow-primary-light/20 transition-all duration-300">
                   <div className="absolute inset-0 bg-gradient-to-br from-primary-DEFAULT/10 via-secondary-DEFAULT/10 to-transparent transform scale-150 rotate-45 translate-x-1/2 opacity-0 group-hover:opacity-100 group-hover:rotate-0 group-hover:scale-100 group-hover:translate-x-0 transition-all duration-700 ease-out"></div>
                   <div className="relative z-10 group-hover:scale-110 transition-transform duration-500">
                     {service.icon}
@@ -24,7 +24,7 @@ const Services: React.FC = () => {
               </div>
               <div className="md:w-1/2">
                 <h2 className="text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-dark to-secondary-dark dark:from-primary-light dark:to-secondary-light">{service.title}</h2>
-                <p className="mt-4 text-lg text-light-text-secondary dark:text-dark-text-secondary">
+                <p className="mt-4 text-lg text-white dark:text-charcoal">
                   {service.description}
                 </p>
               </div>

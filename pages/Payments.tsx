@@ -1,4 +1,3 @@
-
 import React from 'react';
 import AnimatedSection from '../components/AnimatedSection';
 
@@ -27,7 +26,7 @@ const Payments: React.FC = () => {
               href="https://stripe.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block w-full px-8 py-3 bg-[#635BFF] text-white font-semibold rounded-md shadow-lg hover:bg-[#534bff] transition-transform transform hover:scale-105"
+              className="inline-block w-full px-8 py-3 bg-light-bg-secondary dark:bg-dark-bg-secondary font-semibold rounded-md shadow-lg text-light-text dark:text-dark-text hover:ring-2 hover:ring-primary-DEFAULT transition-all transform hover:scale-105"
             >
               Go to Stripe
             </a>
@@ -48,7 +47,7 @@ const Payments: React.FC = () => {
               href="https://payoneer.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block w-full px-8 py-3 bg-[#FF4800] text-white font-semibold rounded-md shadow-lg hover:bg-[#e64400] transition-transform transform hover:scale-105"
+              className="inline-block w-full px-8 py-3 bg-light-bg-secondary dark:bg-dark-bg-secondary font-semibold rounded-md shadow-lg text-light-text dark:text-dark-text hover:ring-2 hover:ring-primary-DEFAULT transition-all transform hover:scale-105"
             >
               Go to Payoneer
             </a>

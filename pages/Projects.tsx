@@ -5,7 +5,7 @@ import AnimatedSection from '../components/AnimatedSection';
 
 const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
     return (
-        <div className="group bg-light-bg-secondary dark:bg-dark-bg-secondary rounded-lg shadow-lg overflow-hidden transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl hover:shadow-primary-DEFAULT/20 dark:hover:shadow-secondary-DEFAULT/20">
+        <div className="group bg-light-bg-secondary dark:bg-dark-bg-secondary rounded-lg shadow-lg overflow-hidden transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl hover:shadow-primary-DEFAULT/20 dark:hover:shadow-secondary-DEFAULT/20 border border-primary-DEFAULT">
             <div className="overflow-hidden">
                 <img src={project.media[0]} alt={project.name} className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
@@ -17,12 +17,12 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
                         </span>
                     ))}
                 </div>
-                <h3 className="text-xl font-bold mb-2">{project.name}</h3>
-                <p className="text-light-text-secondary dark:text-dark-text-secondary mb-4 h-24 overflow-hidden">
+                <h3 className="text-xl font-bold mb-2 text-white dark:text-charcoal">{project.name}</h3>
+                <p className="text-white dark:text-charcoal mb-4 h-24 overflow-hidden">
                     {project.description}
                 </p>
                 <div className="flex justify-between items-center mt-4">
-                    <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="font-semibold text-light-text dark:text-dark-text hover:text-primary-DEFAULT transition-colors group/link inline-flex items-center gap-2">
+                    <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="font-semibold text-white dark:text-charcoal hover:text-primary-DEFAULT transition-colors group/link inline-flex items-center gap-2">
                         View on GitHub
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 transition-transform group-hover/link:translate-x-1"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
                     </a>
@@ -59,7 +59,7 @@ const Projects: React.FC = () => {
     return (
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
             <AnimatedSection className="text-center">
-                <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">Our Portfolio</h1>
+                <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary-dark to-secondary-dark dark:from-primary-light dark:to-secondary-light">Our Portfolio</h1>
                 <p className="mt-4 max-w-3xl mx-auto text-lg text-light-text-secondary dark:text-dark-text-secondary">
                     A selection of projects that showcase our skills, creativity, and commitment to quality.
                 </p>

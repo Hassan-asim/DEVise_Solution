@@ -2,12 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { sendMessageToBot } from '../services/geminiService';
 import type { ChatMessage } from '../types';
 import { GenerateContentResponse } from '@google/genai';
-
-const BotIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>
-);
+import logo from './logo.jpg';
 
 const CloseIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -79,10 +74,10 @@ const Chatbot: React.FC = () => {
             <div className={`fixed bottom-0 right-0 m-4 sm:m-8 transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-full' : 'translate-x-0'}`}>
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="bg-primary-DEFAULT hover:bg-primary-dark text-black p-4 rounded-full shadow-lg animate-subtle-glow"
+                    className="bg-primary-DEFAULT hover:bg-primary-dark text-black p-0 rounded-full shadow-lg animate-subtle-glow w-16 h-16 flex items-center justify-center"
                     aria-label="Open chat"
                 >
-                    <BotIcon />
+                    <img src={logo} alt="Chatbot" className="w-full h-full rounded-full object-cover" />
                 </button>
             </div>
             <div className={`fixed bottom-0 right-0 sm:m-4 h-full sm:h-[70vh] w-full sm:max-w-md shadow-2xl transition-transform duration-500 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full sm:translate-x-[120%]'} rounded-none sm:rounded-lg p-0.5 bg-gradient-to-br from-primary-DEFAULT via-secondary-DEFAULT to-primary-DEFAULT`}>
@@ -125,7 +120,7 @@ const Chatbot: React.FC = () => {
                                 disabled={isLoading}
                                 className="flex-1 px-4 py-2 bg-light-bg-secondary dark:bg-dark-bg-secondary border border-slate-300 dark:border-slate-600 rounded-full focus:ring-2 focus:ring-primary-DEFAULT focus:outline-none"
                             />
-                            <button type="submit" disabled={isLoading || !input.trim()} className="p-3 rounded-full bg-primary-DEFAULT text-black disabled:bg-gray-400 disabled:cursor-not-allowed">
+                            <button type="submit" disabled={isLoading || !input.trim()} className="p-3 rounded-full bg-light-bg-secondary dark:bg-dark-bg-secondary text-light-text dark:text-dark-text hover:ring-2 hover:ring-primary-DEFAULT transition-all transform hover:scale-105 disabled:bg-gray-400 disabled:cursor-not-allowed">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
                                     <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
                                 </svg>

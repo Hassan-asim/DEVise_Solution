@@ -11,7 +11,10 @@ import Founders from './pages/Founders';
 import Projects from './pages/Projects';
 import Contact from './pages/Contact';
 import Payments from './pages/Payments';
+import Blogs from './pages/Blogs';
+import BlogPost from './pages/blog/[slug]';
 import ScrollToTop from './components/ScrollToTop';
+import FooterBanner from './components/FooterBanner';
 
 const App: React.FC = () => {
   return (
@@ -29,9 +32,12 @@ const App: React.FC = () => {
               <Route path="/projects" element={<Projects />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/payments" element={<Payments />} />
+              <Route path="/blogs" element={<Blogs />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
             </Routes>
           </main>
           <Footer />
+          <FooterBanner />
           <Chatbot />
         </div>
       </HashRouter>
