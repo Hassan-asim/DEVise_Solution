@@ -27,20 +27,25 @@ ${markdownContent}`;
 
   try {
     const result = await model.generateContent(prompt);
-    const text = result.response.text();
+    let text = result.response.text(); // Use 'let' because we will reassign
+
+    // Remove Markdown code block delimiters if present
+    if (text.startsWith('```json')) {
+      text = text.substring(7); // Remove '```json'
+    }
+    if (text.endsWith('```')) {
+      text = text.substring(0, text.length - 3); // Remove '```'
+    }
     
-    // Attempt to parse the response as JSON
     const generatedContent = JSON.parse(text);
 
     return response.status(200).json(generatedContent);
   } catch (error) {
     console.error("Error generating or parsing content from Gemini:", error);
-    // If parsing fails, it means Gemini didn't return valid JSON.
-    // We can return the raw text for debugging, or a generic error.
     return response.status(500).json({ 
         error: "Failed to generate blog post or parse Gemini response.",
         details: (error as Error).message,
-        geminiResponse: text // Include raw response for debugging
+        geminiResponse: text // 'text' should be defined here
     });
   }
 }
