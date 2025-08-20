@@ -11,7 +11,7 @@ const FounderCard: React.FC<{ founder: typeof FOUNDERS[0] }> = ({ founder }) => 
         alt={founder.name}
       />
       <h3 className="mt-6 text-xl font-bold text-white dark:text-charcoal">{founder.name}</h3>
-      <p className="mt-1 text-primary-DEFAULT group-hover:text-secondary-DEFAULT transition-colors duration-300">Co-Founder</p>
+      <p className="mt-1 text-white dark:text-charcoal duration-300">Co-Founder</p>
       <div className="mt-4 flex justify-center space-x-4">
         <a href={founder.github} target="_blank" rel="noopener noreferrer" className="text-white hover:text-primary-DEFAULT dark:text-charcoal dark:hover:text-primary-light transition-colors">
             <span className="sr-only">GitHub</span>

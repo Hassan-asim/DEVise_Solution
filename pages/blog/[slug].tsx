@@ -19,13 +19,11 @@ const BlogPostPage: React.FC = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        // In a real application, you would fetch the markdown content from a server.
-        // For now, we will fetch it from the local `blog` directory.
-        const response = await fetch(`/blog/${slug}.md`);
-        if (!response.ok) {
-          throw new Error('Blog post not found');
+        const contentResponse = await fetch(`/api/get-blog-content?slug=${slug}`);
+        if (!contentResponse.ok) {
+          throw new Error('Blog post content not found');
         }
-        const markdownContent = await response.text();
+        const markdownContent = await contentResponse.text();
 
         const apiResponse = await fetch('/api/generate-blog', {
           method: 'POST',

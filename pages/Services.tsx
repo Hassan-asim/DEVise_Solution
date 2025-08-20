@@ -6,7 +6,7 @@ const Services: React.FC = () => {
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
       <AnimatedSection className="text-center">
-        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">Our Services</h1>
+        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary-dark to-secondary-dark dark:from-primary-light dark:to-secondary-light">Our Services</h1>
         <p className="mt-4 max-w-3xl mx-auto text-lg text-light-text-secondary dark:text-dark-text-secondary">
           We provide end-to-end solutions to help you innovate, scale, and achieve your business goals.
         </p>
