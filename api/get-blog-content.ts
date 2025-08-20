@@ -14,7 +14,7 @@ async function generateAndSaveBlog(slug: string) {
   const markdownContent = fs.readFileSync(markdownFilePath, 'utf8');
 
   const prompt = `Please rewrite the following blog post in a more engaging and modern style.
-Return the output as a JSON object with the following keys:
+Return the output as a JSON object inside a markdown code block with the language set to json.
 - "title": The title of the blog post.
 - "imageUrl": A relevant image URL found on the internet.
 - "introduction": A short introduction.
@@ -27,14 +27,14 @@ ${markdownContent}`;
   const result = await model.generateContent(prompt);
   let text = result.response.text();
 
-  const jsonStartIndex = text.indexOf('{');
-  const jsonEndIndex = text.lastIndexOf('}');
+  const jsonRegex = /```json\n({[\s\S]*?})\n```/;
+  const match = text.match(jsonRegex);
 
-  if (jsonStartIndex === -1 || jsonEndIndex === -1) {
+  if (!match || !match[1]) {
     throw new Error("Could not find valid JSON block in Gemini's response.");
   }
 
-  const jsonString = text.substring(jsonStartIndex, jsonEndIndex + 1);
+  const jsonString = match[1];
   const generatedContent = JSON.parse(jsonString);
 
   fs.writeFileSync(generatedFilePath, JSON.stringify(generatedContent, null, 2), 'utf8');
