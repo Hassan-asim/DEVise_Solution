@@ -33,7 +33,7 @@ const Home: React.FC = () => {
               </Link>
               <Link
                 to="/contact"
-                className="inline-block px-8 py-3 bg-light-bg-secondary dark:bg-dark-bg-secondary font-semibold rounded-md shadow-lg hover:ring-2 hover:ring-primary-DEFAULT transition-all transform hover:scale-105"
+                className="inline-block px-8 py-3 bg-light-bg-secondary dark:bg-dark-bg-secondary font-semibold rounded-md shadow-lg text-light-text dark:text-dark-text hover:ring-2 hover:ring-primary-DEFAULT transition-all transform hover:scale-105"
               >
                 Contact Us
               </Link>
@@ -56,8 +56,8 @@ const Home: React.FC = () => {
               <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary-DEFAULT/20 to-secondary-DEFAULT/20 opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
               <div className="relative z-10">
                 <div className="flex justify-center group-hover:scale-110 transition-transform duration-300">{service.icon}</div>
-                <h3 className="mt-5 text-lg font-semibold text-center">{service.title}</h3>
-                <p className="mt-2 text-sm text-light-text-secondary dark:text-dark-text-secondary text-center">
+                <h3 className="mt-5 text-lg font-semibold text-center text-white dark:text-charcoal">{service.title}</h3>
+                <p className="mt-2 text-sm text-white dark:text-charcoal text-center">
                   {service.description.substring(0, 100)}...
                 </p>
               </div>
@@ -79,7 +79,7 @@ const Home: React.FC = () => {
             <div className="mt-8">
                  <Link
                     to="/contact"
-                    className="inline-block px-8 py-3 bg-light-bg-secondary dark:bg-dark-bg-secondary font-semibold rounded-md shadow-lg hover:ring-2 hover:ring-primary-DEFAULT transition-all transform hover:scale-105"
+                    className="inline-block px-8 py-3 bg-light-bg-secondary dark:bg-dark-bg-secondary font-semibold rounded-md shadow-lg text-light-text dark:text-dark-text hover:ring-2 hover:ring-primary-DEFAULT transition-all transform hover:scale-105"
                  >
                     Start a Conversation
                 </Link>

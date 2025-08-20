@@ -14,23 +14,23 @@ const Contact: React.FC = () => {
 
       <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-12">
         <AnimatedSection>
-            <div className="p-8 bg-light-bg-secondary dark:bg-dark-bg-secondary rounded-lg h-full">
-                <h2 className="text-2xl font-bold mb-4">Direct Contact</h2>
+            <div className="p-8 bg-charcoal dark:bg-light-bg-secondary rounded-lg h-full">
+                <h2 className="text-2xl font-bold mb-4 text-white dark:text-charcoal">Direct Contact</h2>
                 {FOUNDERS.map(founder => (
                     <div key={founder.name} className="mb-4">
-                        <h3 className="font-semibold">{founder.name}</h3>
+                        <h3 className="font-semibold text-white dark:text-charcoal">{founder.name}</h3>
                         <a href={`mailto:${founder.email}`} className="text-primary-DEFAULT hover:underline">{founder.email}</a>
                     </div>
                 ))}
-                <p className="mt-8 text-sm text-light-text-secondary dark:text-dark-text-secondary">
+                <p className="mt-8 text-sm text-white dark:text-charcoal">
                     For general inquiries, please use the contact form. For a more interactive experience, try our AI assistant!
                 </p>
             </div>
         </AnimatedSection>
         <AnimatedSection>
-             <div className="p-8 bg-light-bg-secondary dark:bg-dark-bg-secondary rounded-lg h-full">
-                <h2 className="text-2xl font-bold mb-4">Send Us a Message</h2>
-                <p className="text-light-text-secondary dark:text-dark-text-secondary">
+             <div className="p-8 bg-charcoal dark:bg-light-bg-secondary rounded-lg h-full">
+                <h2 className="text-2xl font-bold mb-4 text-white dark:text-charcoal">Send Us a Message</h2>
+                <p className="text-white dark:text-charcoal">
                     Have a question or a project proposal? Fill out the form in our footer, and our team will get back to you as soon as possible. We look forward to collaborating with you!
                 </p>
                 <button 

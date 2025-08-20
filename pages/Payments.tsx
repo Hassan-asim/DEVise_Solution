@@ -14,11 +14,11 @@ const Payments: React.FC = () => {
       <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
         {/* Stripe Card */}
         <AnimatedSection>
-          <div className="p-8 bg-light-bg-secondary dark:bg-dark-bg-secondary rounded-lg shadow-lg text-center h-full flex flex-col justify-between">
+          <div className="p-8 bg-charcoal dark:bg-light-bg-secondary rounded-lg shadow-lg text-center h-full flex flex-col justify-between">
             <div>
                 <img src="https://stripe.com/img/v3/home/social.png" alt="Stripe Logo" className="h-16 mx-auto mb-4 object-contain"/>
-                <h2 className="text-2xl font-bold mb-2">Pay with Stripe</h2>
-                <p className="text-light-text-secondary dark:text-dark-text-secondary mb-6">
+                <h2 className="text-2xl font-bold mb-2 text-white dark:text-charcoal">Pay with Stripe</h2>
+                <p className="text-white dark:text-charcoal mb-6">
                     Ideal for credit/debit card payments. Secure, fast, and reliable.
                 </p>
             </div>
@@ -35,11 +35,11 @@ const Payments: React.FC = () => {
 
         {/* Payoneer Card */}
         <AnimatedSection>
-          <div className="p-8 bg-light-bg-secondary dark:bg-dark-bg-secondary rounded-lg shadow-lg text-center h-full flex flex-col justify-between">
+          <div className="p-8 bg-charcoal dark:bg-light-bg-secondary rounded-lg shadow-lg text-center h-full flex flex-col justify-between">
             <div>
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Payoneer_logo.svg/1280px-Payoneer_logo.svg.png" alt="Payoneer Logo" className="h-16 mx-auto mb-4 object-contain dark:invert"/>
-                <h2 className="text-2xl font-bold mb-2">Pay with Payoneer</h2>
-                <p className="text-light-text-secondary dark:text-dark-text-secondary mb-6">
+                <h2 className="text-2xl font-bold mb-2 text-white dark:text-charcoal">Pay with Payoneer</h2>
+                <p className="text-white dark:text-charcoal mb-6">
                     Perfect for international bank transfers and other payment methods.
                 </p>
             </div>

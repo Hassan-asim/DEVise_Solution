@@ -6,13 +6,18 @@ const Blogs: React.FC = () => {
   const [blogPosts, setBlogPosts] = useState<string[]>([]);
 
   useEffect(() => {
-    // In a real application, you would fetch the list of blog posts from a server.
-    // For now, we will just list the files in the `blog` directory.
-    // This is a simplified approach and will not work in production.
     const fetchBlogPosts = async () => {
-      // This is a placeholder. We will replace this with a proper implementation later.
-      const posts = ['sample-post.md'];
-      setBlogPosts(posts);
+      try {
+        const response = await fetch('/api/list-blogs');
+        if (!response.ok) {
+          throw new Error('Failed to fetch blog posts');
+        }
+        const data = await response.json();
+        setBlogPosts(data.files);
+      } catch (error) {
+        console.error('Error fetching blog posts:', error);
+        // Optionally, set an error state or display a message to the user
+      }
     };
 
     fetchBlogPosts();
@@ -33,8 +38,8 @@ const Blogs: React.FC = () => {
         {blogPosts.map((post) => (
           <AnimatedSection key={post}>
             <Link to={`/blog/${post.replace('.md', '')}`}>
-              <div className="group p-6 bg-light-bg-secondary dark:bg-dark-bg-secondary rounded-lg shadow-md hover:shadow-xl hover:shadow-primary-DEFAULT/20 dark:hover:shadow-secondary-DEFAULT/20 transition-all duration-300 transform hover:-translate-y-1">
-                <h2 className="text-xl font-bold">{post.replace('.md', '')}</h2>
+              <div className="group p-6 bg-charcoal dark:bg-light-bg-secondary rounded-lg shadow-md hover:shadow-xl hover:shadow-primary-DEFAULT/20 dark:hover:shadow-secondary-DEFAULT/20 transition-all duration-300 transform hover:-translate-y-1">
+                <h2 className="text-xl font-bold text-white dark:text-charcoal">{post.replace('.md', '')}</h2>
               </div>
             </Link>
           </AnimatedSection>

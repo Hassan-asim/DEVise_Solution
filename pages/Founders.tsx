@@ -4,7 +4,7 @@ import AnimatedSection from '../components/AnimatedSection';
 
 const FounderCard: React.FC<{ founder: typeof FOUNDERS[0] }> = ({ founder }) => {
   return (
-    <div className="group text-center p-6 bg-light-bg-secondary dark:bg-dark-bg-secondary rounded-lg shadow-lg transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary-DEFAULT/40 dark:hover:shadow-secondary-DEFAULT/30 border border-primary-DEFAULT">
+    <div className="group text-center p-6 bg-charcoal dark:bg-light-bg-secondary rounded-lg shadow-lg transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary-DEFAULT/40 dark:hover:shadow-secondary-DEFAULT/30 border border-primary-DEFAULT">
       <img
         className="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full shadow-md border-4 border-primary-DEFAULT/50 transition-all duration-300 group-hover:border-secondary-DEFAULT"
         src={founder.image}

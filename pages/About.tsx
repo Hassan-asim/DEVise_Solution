@@ -27,21 +27,21 @@ const About: React.FC = () => {
       <div className="mt-20">
         <AnimatedSection>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div className="p-8 bg-light-bg-secondary dark:bg-dark-bg-secondary rounded-lg">
-              <h3 className="text-2xl font-bold text-primary-DEFAULT">Innovation</h3>
-              <p className="mt-2 text-light-text-secondary dark:text-dark-text-secondary">
+            <div className="p-8 bg-charcoal dark:bg-light-bg-secondary rounded-lg">
+              <h3 className="text-2xl font-bold text-white dark:text-charcoal">Innovation</h3>
+              <p className="mt-2 text-white dark:text-charcoal">
                 We constantly explore new technologies and approaches to deliver cutting-edge solutions.
               </p>
             </div>
-            <div className="p-8 bg-light-bg-secondary dark:bg-dark-bg-secondary rounded-lg">
-              <h3 className="text-2xl font-bold text-primary-DEFAULT">Partnership</h3>
-              <p className="mt-2 text-light-text-secondary dark:text-dark-text-secondary">
+            <div className="p-8 bg-charcoal dark:bg-light-bg-secondary rounded-lg">
+              <h3 className="text-2xl font-bold text-white dark:text-charcoal">Partnership</h3>
+              <p className="mt-2 text-white dark:text-charcoal">
                 We work as an extension of your team, fostering collaboration and transparency.
               </p>
             </div>
-            <div className="p-8 bg-light-bg-secondary dark:bg-dark-bg-secondary rounded-lg">
-              <h3 className="text-2xl font-bold text-primary-DEFAULT">Quality</h3>
-              <p className="mt-2 text-light-text-secondary dark:text-dark-text-secondary">
+            <div className="p-8 bg-charcoal dark:bg-light-bg-secondary rounded-lg">
+              <h3 className="text-2xl font-bold text-white dark:text-charcoal">Quality</h3>
+              <p className="mt-2 text-white dark:text-charcoal">
                 Our commitment to excellence ensures robust, scalable, and maintainable software.
               </p>
             </div>
