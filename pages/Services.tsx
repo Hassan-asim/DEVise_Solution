@@ -24,7 +24,7 @@ const Services: React.FC = () => {
               </div>
               <div className="md:w-1/2">
                 <h2 className="text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-dark to-secondary-dark dark:from-primary-light dark:to-secondary-light">{service.title}</h2>
-                <p className="mt-4 text-lg text-white dark:text-charcoal">
+                <p className="mt-4 text-lg text-light-text dark:text-dark-text">
                   {service.description}
                 </p>
               </div>

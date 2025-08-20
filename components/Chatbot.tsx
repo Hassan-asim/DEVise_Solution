@@ -94,7 +94,7 @@ const Chatbot: React.FC = () => {
                             {messages.map((message) => (
                                 <div key={message.id} className={`flex items-end gap-2 ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                                     {message.sender === 'bot' && <div className="w-8 h-8 rounded-full bg-primary-DEFAULT flex items-center justify-center text-black font-bold flex-shrink-0">D</div>}
-                                    <div className={`px-4 py-2 rounded-lg max-w-xs md:max-w-sm ${message.sender === 'user' ? 'bg-gradient-to-r from-primary-DEFAULT to-secondary-DEFAULT text-black' : 'bg-light-bg-secondary dark:bg-dark-bg-secondary'}`}>
+                                    <div className={`px-4 py-2 rounded-lg max-w-xs md:max-w-sm ${message.sender === 'user' ? 'bg-primary-DEFAULT text-black dark:bg-primary-light dark:text-dark-bg' : 'bg-light-bg-secondary dark:bg-dark-bg-secondary'}`}>
                                         <p className="text-sm break-words">{message.text}</p>
                                         {isLoading && message.sender === 'bot' && message.text === '' && (
                                             <div className="flex items-center justify-center space-x-1 pt-2">

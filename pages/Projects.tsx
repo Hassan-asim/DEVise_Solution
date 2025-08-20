@@ -5,7 +5,7 @@ import AnimatedSection from '../components/AnimatedSection';
 
 const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
     return (
-        <div className="group bg-light-bg-secondary dark:bg-dark-bg-secondary rounded-lg shadow-lg overflow-hidden transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl hover:shadow-primary-DEFAULT/20 dark:hover:shadow-secondary-DEFAULT/20 border border-primary-DEFAULT">
+        <div className="group bg-charcoal dark:bg-light-bg-secondary rounded-lg shadow-lg overflow-hidden transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl hover:shadow-primary-DEFAULT/20 dark:hover:shadow-secondary-DEFAULT/20 border border-primary-DEFAULT">
             <div className="overflow-hidden">
                 <img src={project.media[0]} alt={project.name} className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
