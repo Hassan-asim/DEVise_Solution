@@ -9,7 +9,7 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 async function generateAndSaveBlog(slug: string) {
   const markdownFilePath = path.join(process.cwd(), 'blog', `${slug}.md`);
-  const generatedFilePath = path.join(process.cwd(), 'generated-blogs', `${slug}.json`);
+  const generatedFilePath = path.join('/tmp', `${slug}.json`);
 
   const markdownContent = fs.readFileSync(markdownFilePath, 'utf8');
 
@@ -53,7 +53,7 @@ export default async function handler(
   }
 
   try {
-    const generatedFilePath = path.join(process.cwd(), 'generated-blogs', `${slug}.json`);
+    const generatedFilePath = path.join('/tmp', `${slug}.json`);
 
     if (fs.existsSync(generatedFilePath)) {
       const cachedContent = fs.readFileSync(generatedFilePath, 'utf8');
