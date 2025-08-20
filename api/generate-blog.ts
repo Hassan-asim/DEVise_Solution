@@ -14,7 +14,7 @@ export default async function handler(
   }
 
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
-  const model = genAI.getGenerativeModel({ model: "gemini-1.0-pro" }); // Changed model name
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }); // Changed model name
 
   const prompt = `Rewrite the following blog post in a more engaging and modern style. Add a title, a short introduction, and a conclusion. Also, find a relevant image on the internet and provide the URL. Finally, add some reference links to relevant websites.
 
