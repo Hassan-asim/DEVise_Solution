@@ -27,17 +27,19 @@ ${markdownContent}`;
 
   try {
     const result = await model.generateContent(prompt);
-    let text = result.response.text(); // Use 'let' because we will reassign
+    let text = result.response.text();
 
-    // Remove Markdown code block delimiters if present
-    if (text.startsWith('```json')) {
-      text = text.substring(7); // Remove '```json'
+    // Robustly extract JSON block
+    const jsonStartIndex = text.indexOf('{');
+    const jsonEndIndex = text.lastIndexOf('}');
+
+    if (jsonStartIndex === -1 || jsonEndIndex === -1) {
+      throw new Error("Could not find valid JSON block in Gemini's response.");
     }
-    if (text.endsWith('```')) {
-      text = text.substring(0, text.length - 3); // Remove '```'
-    }
+
+    const jsonString = text.substring(jsonStartIndex, jsonEndIndex + 1);
     
-    const generatedContent = JSON.parse(text);
+    const generatedContent = JSON.parse(jsonString);
 
     return response.status(200).json(generatedContent);
   } catch (error) {
@@ -45,7 +47,7 @@ ${markdownContent}`;
     return response.status(500).json({ 
         error: "Failed to generate blog post or parse Gemini response.",
         details: (error as Error).message,
-        geminiResponse: text // 'text' should be defined here
+        geminiResponse: text // Include raw response for debugging
     });
   }
 }
