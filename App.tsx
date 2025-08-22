@@ -15,7 +15,7 @@ import Blogs from './pages/Blogs';
 import BlogPost from './pages/blog/[slug]';
 import ScrollToTop from './components/ScrollToTop';
 import FooterBanner from './components/FooterBanner';
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/react"
 
 const App: React.FC = () => {
   return (
