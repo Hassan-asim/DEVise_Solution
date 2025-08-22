@@ -11,6 +11,8 @@ import Founders from './pages/Founders';
 import Projects from './pages/Projects';
 import Contact from './pages/Contact';
 import Payments from './pages/Payments';
+import PaymentSuccess from './pages/PaymentSuccess';
+import PaymentCancelled from './pages/PaymentCancelled';
 import Blogs from './pages/Blogs';
 import BlogPost from './pages/blog/[slug]';
 import ScrollToTop from './components/ScrollToTop';
@@ -33,6 +35,8 @@ const App: React.FC = () => {
               <Route path="/projects" element={<Projects />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/payments" element={<Payments />} />
+              <Route path="/payment-success" element={<PaymentSuccess />} />
+              <Route path="/payment-cancelled" element={<PaymentCancelled />} />
               <Route path="/blogs" element={<Blogs />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
             </Routes>

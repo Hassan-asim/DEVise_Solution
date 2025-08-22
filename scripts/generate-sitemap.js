@@ -18,6 +18,8 @@ const staticRoutes = [
   '/projects',
   '/contact',
   '/payments',
+  '/payment-success',
+  '/payment-cancelled',
   '/blogs'
 ];
 
@@ -61,7 +63,7 @@ function generateSitemap() {
     const changefreq = route === '/' ? 'weekly' : 'monthly';
     
     xml += '  <url>\n';
-    xml += `    <loc>${SITE_URL}${route === '/' ? '' : '#' + route}</loc>\n`;
+    xml += `    <loc>${SITE_URL}${route === '/' ? '' : '/#' + route}</loc>\n`;
     xml += `    <lastmod>${currentDate}</lastmod>\n`;
     xml += `    <changefreq>${changefreq}</changefreq>\n`;
     xml += `    <priority>${priority}</priority>\n`;

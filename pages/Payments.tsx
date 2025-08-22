@@ -1,5 +1,6 @@
 import React from 'react';
 import AnimatedSection from '../components/AnimatedSection';
+import PolarPayment from '../components/PolarPayment';
 
 const Payments: React.FC = () => {
   return (
@@ -11,7 +12,7 @@ const Payments: React.FC = () => {
         </p>
       </AnimatedSection>
 
-      <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+      <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
         {/* Stripe Card */}
         <AnimatedSection>
           <div className="p-8 bg-charcoal dark:bg-light-bg-secondary rounded-lg shadow-lg text-center h-full flex flex-col justify-between">
@@ -52,6 +53,11 @@ const Payments: React.FC = () => {
               Go to Payoneer
             </a>
           </div>
+        </AnimatedSection>
+
+        {/* Polar.sh Card */}
+        <AnimatedSection>
+          <PolarPayment className="h-full" />
         </AnimatedSection>
       </div>
     </div>
