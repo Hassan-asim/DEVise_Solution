@@ -23,8 +23,9 @@ const GITHUB_USERNAME = process.env.GITHUB_USERNAME || 'Hassan-asim';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // optional for higher rate limits
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY; // optional for summarization/title
 
-const CACHE_FILE = '/tmp/projects-cache.json';
+const CACHE_FILE = '/tmp/projects-cache-v2.json';
 const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
+const IMAGE_VERSION = '3';
 
 const EXCLUDE_NAMES = new Set<string>(['DEVise_Solution', 'Hassan-asim']);
 const EXCLUDE_URLS = new Set<string>([
@@ -135,18 +136,18 @@ function extractTechKeywords(title: string, summary: string, tags: string[]): st
     backend: ['api','server','backend','microservice'],
     db: ['postgres','mysql','mongodb','redis','sql']
   };
-  for (const [key, terms] of Object.entries(dict)) {
-    if (terms.some(t => base.includes(t))) found.push(key);
+  for (const [, terms] of Object.entries(dict)) {
+    if (terms.some(t => base.includes(t))) found.push(...terms);
   }
   // bias to code visuals
   return Array.from(new Set([...found, 'code','programming','syntax','terminal','editor','ide','screens']));
 }
 
-function imageForProject(id: number, title: string, summary: string, tags: string[]): string {
+function imageForProject(id: number, title: string, summary: string, tags: string[], refresh?: boolean): string {
   const terms = extractTechKeywords(title, summary, tags);
   const q = encodeURIComponent(terms.join(','));
-  // deterministic seed by repo id to reduce flicker; use Unsplash Source featured endpoint
-  return `https://source.unsplash.com/featured/800x600?${q}&sig=${id}`;
+  const v = `v=${IMAGE_VERSION}` + (refresh ? `&t=${Date.now()}` : '');
+  return `https://source.unsplash.com/featured/800x600?${q}&sig=${id}&${v}`;
 }
 
 function readCache(): { timestamp: number; payload: ProjectOut[] } | null {
@@ -188,7 +189,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         id: repo.id,
         name: title,
         description: summary,
-        media: [imageForProject(repo.id, title, summary, tags)],
+        media: [imageForProject(repo.id, title, summary, tags, refresh)],
         githubUrl: repo.html_url,
         tags,
       });
