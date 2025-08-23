@@ -3,10 +3,12 @@ import { Link } from 'react-router-dom';
 import AnimatedSection from '../components/AnimatedSection';
 import { SERVICES } from '../constants';
 import banner from '../components/less horizontal banner 16-9.png';
+import TechLogosBackground from '../components/TechLogosBackground';
 
 const Home: React.FC = () => {
   return (
-    <div className="space-y-16 md:space-y-24">
+    <div className="relative space-y-16 md:space-y-24">
+      <TechLogosBackground />
       {/* Hero Section */}
       <section 
         className="relative py-40 md:py-56 lg:py-64 bg-cover bg-center"
@@ -15,7 +17,7 @@ const Home: React.FC = () => {
         <div className="absolute inset-0 bg-black/30"></div>
       </section>
 
-      <section className="py-16 md:py-24">
+      <section className="py-16 md:py-24 relative">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection className="text-center">
             <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-light-text dark:text-dark-text">
@@ -43,7 +45,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Services Overview */}
-      <AnimatedSection className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <AnimatedSection className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-light-text dark:text-dark-text drop-shadow-[0_0_8px_rgba(0,255,255,0.3)]">What We Do</h2>
           <p className="mt-4 text-lg text-light-text-secondary dark:text-dark-text-secondary">
@@ -72,7 +74,7 @@ const Home: React.FC = () => {
       </AnimatedSection>
       
        {/* Call to Action */}
-      <AnimatedSection className="bg-light-bg-secondary dark:bg-dark-bg-secondary">
+      <AnimatedSection className="bg-light-bg-secondary dark:bg-dark-bg-secondary relative">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
             <h2 className="text-3xl font-bold tracking-tight">Have a project in mind?</h2>
             <p className="mt-4 text-lg text-light-text-secondary dark:text-dark-text-secondary">Let's build something amazing together.</p>
