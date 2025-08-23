@@ -51,15 +51,17 @@ const random = (min: number, max: number) => Math.random() * (max - min) + min;
 
 const TechLogosBackground: React.FC = () => {
 	return (
-		<div className="pointer-events-none absolute inset-0 overflow-hidden opacity-10">
+		<div className="pointer-events-none absolute inset-0 overflow-hidden opacity-20">
 			<div className="absolute inset-0" style={{ transform: 'translateZ(0)' }}>
-				{Array.from({ length: 32 }).map((_, i) => {
+				{Array.from({ length: 36 }).map((_, i) => {
 					const logo = logos[i % logos.length];
 					const left = random(0, 90);
 					const top = random(0, 90);
 					const size = random(28, 56);
-					const duration = random(12, 24);
-					const delay = random(0, 10);
+					const duration = random(14, 28);
+					const delay = random(0, 12);
+					const driftX = random(-20, 20);
+					const rotate = random(-10, 10);
 					return (
 						<img
 							key={i}
@@ -71,17 +73,18 @@ const TechLogosBackground: React.FC = () => {
 								top: `${top}%`,
 								width: size,
 								height: size,
-								animation: `floatY ${duration}s ease-in-out ${delay}s infinite alternate`,
+								animation: `floatDrift ${duration}s ease-in-out ${delay}s infinite alternate`,
 								filter: 'grayscale(100%)',
+								transform: `rotate(${rotate}deg)`
 							}}
 						/>
 					);
 				})}
 			</div>
 			<style>{`
-			@keyframes floatY {
-				0% { transform: translateY(0px) scale(1); }
-				100% { transform: translateY(-20px) scale(1.05); }
+			@keyframes floatDrift {
+				0% { transform: translate(0px, 0px) scale(1) rotate(0deg); }
+				100% { transform: translate(${random(-20, 20)}px, -24px) scale(1.05) rotate(${random(-8, 8)}deg); }
 			}
 			`}</style>
 		</div>
