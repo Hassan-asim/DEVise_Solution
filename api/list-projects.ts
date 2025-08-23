@@ -34,6 +34,27 @@ const EXCLUDE_URLS = new Set<string>([
   'https://github.com/Hassan-asim/Hassan-asim.git',
 ]);
 
+// Curated coding/terminal/IDE themed Unsplash images (direct static links)
+const CODE_IMAGES: string[] = [
+  'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1200&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1200&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1517433456452-f9633a875f6f?q=80&w=1200&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1200&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1510511233900-1982d92bd835?q=80&w=1200&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?q=80&w=1200&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1526378722484-bd91ca387e72?q=80&w=1200&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?q=80&w=1200&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1200&auto=format&fit=crop'
+];
+
+function codeImageFor(seed: number): string {
+  const idx = Math.abs(seed) % CODE_IMAGES.length;
+  return CODE_IMAGES[idx];
+}
+
 async function fetchRepos(): Promise<Repo[]> {
   const url = `https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`;
   const res = await fetch(url, {
@@ -114,20 +135,6 @@ function pickTags(name: string, description: string): string[] {
   return Array.from(tags).length ? Array.from(tags) : ['Project'];
 }
 
-function unsplashFor(name: string, title: string, tags: string[], description?: string): string {
-  const baseKeywords = ['software', 'programming', 'developer', 'code', 'technology', 'app', 'web', 'digital', 'tech'];
-  const tagKeywords = tags.map(t => t.toLowerCase());
-  const words = `${title} ${name} ${description || ''}`
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, ' ')
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 6); // limit noise
-  const all = Array.from(new Set([...words, ...tagKeywords, ...baseKeywords]));
-  const q = encodeURIComponent(all.join(','));
-  return `https://source.unsplash.com/featured/800x600?${q}`;
-}
-
 function readCache(): { timestamp: number; payload: ProjectOut[] } | null {
   try {
     if (!fs.existsSync(CACHE_FILE)) return null;
@@ -148,8 +155,9 @@ function writeCache(payload: ProjectOut[]): void {
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
+    const refresh = (req.query?.refresh === '1');
     // try cache first
-    const cached = readCache();
+    const cached = !refresh ? readCache() : null;
     if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
       res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=300');
       return res.status(200).json({ projects: cached.payload });
@@ -166,7 +174,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         id: repo.id,
         name: title,
         description: summary,
-        media: [unsplashFor(repo.name, title, tags, summary)],
+        media: [codeImageFor(repo.id)],
         githubUrl: repo.html_url,
         tags,
       });
