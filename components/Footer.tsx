@@ -168,7 +168,7 @@ const Footer: React.FC = () => {
                         Sending...
                       </span>
                     ) : (
-                      'Send via Gmail'
+                      'Send message'
                     )}
                   </button>
                   
@@ -177,7 +177,7 @@ const Footer: React.FC = () => {
                     onClick={handleEmailFallback}
                     className="px-6 py-3 bg-light-bg dark:bg-dark-bg-secondary font-semibold rounded-md shadow-lg text-light-text dark:text-dark-text hover:ring-2 hover:ring-primary-DEFAULT transition-all transform hover:scale-105 border border-slate-300 dark:border-slate-600"
                   >
-                    Use Email Client
+                    Send via Email
                   </button>
                 </div>
 

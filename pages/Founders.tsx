@@ -1,6 +1,7 @@
 import React from 'react';
 import { FOUNDERS } from '../constants';
 import AnimatedSection from '../components/AnimatedSection';
+import TechLogosBackground from '../components/TechLogosBackground';
 
 const FounderCard: React.FC<{ founder: typeof FOUNDERS[0] }> = ({ founder }) => {
   return (
@@ -28,20 +29,23 @@ const FounderCard: React.FC<{ founder: typeof FOUNDERS[0] }> = ({ founder }) => 
 
 const Founders: React.FC = () => {
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-      <AnimatedSection className="text-center">
-        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary-dark to-secondary-dark dark:from-primary-light dark:to-secondary-light">Our Founders</h1>
-        <p className="mt-4 max-w-3xl mx-auto text-lg text-light-text-secondary dark:text-dark-text-secondary">
-          The architects of our vision. A dynamic duo blending technical mastery with entrepreneurial spirit.
-        </p>
-      </AnimatedSection>
-      
-      <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-        {FOUNDERS.map((founder) => (
-          <AnimatedSection key={founder.name}>
-            <FounderCard founder={founder} />
-          </AnimatedSection>
-        ))}
+    <div className="relative">
+      <TechLogosBackground />
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative">
+        <AnimatedSection className="text-center">
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary-dark to-secondary-dark dark:from-primary-light dark:to-secondary-light">Our Founders</h1>
+          <p className="mt-4 max-w-3xl mx-auto text-lg text-light-text-secondary dark:text-dark-text-secondary">
+            The architects of our vision. A dynamic duo blending technical mastery with entrepreneurial spirit.
+          </p>
+        </AnimatedSection>
+        
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+          {FOUNDERS.map((founder) => (
+            <AnimatedSection key={founder.name}>
+              <FounderCard founder={founder} />
+            </AnimatedSection>
+          ))}
+        </div>
       </div>
     </div>
   );
