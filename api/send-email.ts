@@ -3,14 +3,14 @@ import { google } from 'googleapis';
 
 // Gmail configuration
 const GMAIL_CONFIG = {
-  clientId: '1079937355180-b0knpfi0j5kqca2et6bvgse08svpotma.apps.googleusercontent.com',
-  clientSecret: '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',
-  refreshToken: process.env.GMAIL_REFRESH_TOKEN, // You'll need to get this
-  fromEmail: 'hassanasim337@gmail.com',
+  clientId: process.env.GMAIL_CLIENT_ID,
+  clientSecret: process.env.GMAIL_CLIENT_SECRET,
+  refreshToken: process.env.GMAIL_REFRESH_TOKEN,
+  fromEmail: process.env.GMAIL_FROM_EMAIL || 'hassanasim337@gmail.com',
   recipients: [
-    'hassanalisajid786@gmail.com',
-    'hassanasim337@gmail.com',
-    'team@devisesolutions.co'
+    process.env.GMAIL_RECIPIENT_1 || 'hassanalisajid786@gmail.com',
+    process.env.GMAIL_RECIPIENT_2 || 'hassanasim337@gmail.com',
+    process.env.GMAIL_RECIPIENT_3 || 'team@devisesolutions.co'
   ]
 };
 
@@ -125,9 +125,13 @@ export default async function handler(
       });
     }
 
-    // Check if refresh token is configured
-    if (!GMAIL_CONFIG.refreshToken) {
-      console.error('Gmail refresh token not configured');
+    // Check if all Gmail configuration is present
+    if (!GMAIL_CONFIG.clientId || !GMAIL_CONFIG.clientSecret || !GMAIL_CONFIG.refreshToken) {
+      console.error('Gmail configuration incomplete:', {
+        hasClientId: !!GMAIL_CONFIG.clientId,
+        hasClientSecret: !!GMAIL_CONFIG.clientSecret,
+        hasRefreshToken: !!GMAIL_CONFIG.refreshToken
+      });
       return response.status(500).json({ 
         error: 'Email service not configured. Please contact us directly.' 
       });

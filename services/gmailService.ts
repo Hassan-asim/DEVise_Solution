@@ -34,38 +34,59 @@ export const sendContactEmail = async (formData: ContactFormData): Promise<Email
       };
     }
 
-    // Send request to our API
-    const response = await fetch('/api/send-email', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData)
-    });
+    // Try Gmail API first
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
 
-    const result = await response.json();
+      const result = await response.json();
 
-    if (response.ok && result.success) {
+      if (response.ok && result.success) {
+        return {
+          success: true,
+          message: result.message || 'Email sent successfully! We will get back to you soon.',
+          messageId: result.messageId
+        };
+      } else {
+        // If Gmail API fails, fall back to mailto
+        console.log('Gmail API failed, using mailto fallback');
+        sendEmailFallback(formData);
+        return {
+          success: true,
+          message: 'Email client opened! Please send the email from your email application.'
+        };
+      }
+    } catch (apiError) {
+      // If API completely fails, use mailto fallback
+      console.log('Gmail API error, using mailto fallback:', apiError);
+      sendEmailFallback(formData);
       return {
         success: true,
-        message: result.message || 'Email sent successfully! We will get back to you soon.',
-        messageId: result.messageId
-      };
-    } else {
-      return {
-        success: false,
-        message: result.error || 'Failed to send email. Please try again.',
-        error: result.error
+        message: 'Email client opened! Please send the email from your email application.'
       };
     }
 
   } catch (error) {
     console.error('Error sending email:', error);
-    return {
-      success: false,
-      message: 'Network error. Please check your connection and try again.',
-      error: error instanceof Error ? error.message : 'Unknown error'
-    };
+    // Last resort - try mailto
+    try {
+      sendEmailFallback(formData);
+      return {
+        success: true,
+        message: 'Email client opened! Please send the email from your email application.'
+      };
+    } catch (fallbackError) {
+      return {
+        success: false,
+        message: 'Unable to send email. Please contact us directly at team@devisesolutions.co',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      };
+    }
   }
 };
 
