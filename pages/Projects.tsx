@@ -73,7 +73,7 @@ const Projects: React.FC = () => {
 
     return (
         <div className="relative">
-            <TechLogosBackground />
+            <TechLogosBackground duplication={3} minSize={14} maxSize={24} opacity={0.22} speedMin={60} speedMax={110} />
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative">
                 <AnimatedSection className="text-center">
                     <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary-dark to-secondary-dark dark:from-primary-light dark:to-secondary-light">Our Portfolio</h1>

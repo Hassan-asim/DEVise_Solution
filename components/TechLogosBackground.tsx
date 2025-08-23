@@ -59,7 +59,16 @@ interface Bubble {
 
 const rand = (min: number, max: number) => Math.random() * (max - min) + min;
 
-const TechLogosBackground: React.FC = () => {
+type Props = {
+	duplication?: number; // how many times to duplicate the logos
+	minSize?: number;
+	maxSize?: number;
+	opacity?: number;
+	speedMin?: number;
+	speedMax?: number;
+};
+
+const TechLogosBackground: React.FC<Props> = ({ duplication = 2, minSize = 16, maxSize = 30, opacity = 0.25, speedMin = 70, speedMax = 120 }) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const imgRefs = useRef<Array<HTMLImageElement | null>>([]);
 	const bubblesRef = useRef<Bubble[]>([]);
@@ -67,10 +76,10 @@ const TechLogosBackground: React.FC = () => {
 	const boundsRef = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
 
 	const items = useMemo(() => {
-		// duplicate every logo at least twice for saturation
-		const duplicated = [...logos, ...logos];
-		return duplicated;
-	}, []);
+		let arr: string[] = [];
+		for (let i = 0; i < duplication; i++) arr = arr.concat(logos);
+		return arr;
+	}, [duplication]);
 
 	useEffect(() => {
 		const container = containerRef.current;
@@ -89,7 +98,7 @@ const TechLogosBackground: React.FC = () => {
 		const maxAttempts = 1000;
 		imgRefs.current.forEach((el) => {
 			if (!el) return;
-			const r = rand(16, 30);
+			const r = rand(minSize, maxSize);
 			let attempts = 0;
 			let x = 0, y = 0;
 			while (attempts++ < maxAttempts) {
@@ -102,7 +111,7 @@ const TechLogosBackground: React.FC = () => {
 				}
 				if (ok) break;
 			}
-			const speed = rand(70, 120); // faster px/sec
+			const speed = rand(speedMin, speedMax);
 			const angle = rand(0, Math.PI * 2);
 			const vx = Math.cos(angle) * speed;
 			const vy = Math.sin(angle) * speed;
@@ -166,10 +175,10 @@ const TechLogosBackground: React.FC = () => {
 			if (rafRef.current) cancelAnimationFrame(rafRef.current);
 			window.removeEventListener('resize', onResize);
 		};
-	}, [items.length]);
+	}, [items.length, minSize, maxSize, speedMin, speedMax]);
 
 	return (
-		<div ref={containerRef} className="pointer-events-none absolute inset-0 overflow-hidden opacity-25">
+		<div ref={containerRef} className="pointer-events-none absolute inset-0 overflow-hidden" style={{ opacity }}>
 			{items.map((src, i) => (
 				<img
 					key={i}

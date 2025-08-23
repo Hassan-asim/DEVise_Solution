@@ -14,7 +14,6 @@ const Home: React.FC = () => {
         style={{ backgroundImage: `url(${banner})` }}
       >
         <div className="absolute inset-0 bg-black/30"></div>
-        <TechLogosBackground />
       </section>
 
       <section className="py-16 md:py-24 relative">
@@ -46,9 +45,8 @@ const Home: React.FC = () => {
       </section>
 
       {/* Services Overview */}
-      <AnimatedSection className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <TechLogosBackground />
-        <div className="text-center relative">
+      <AnimatedSection className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-light-text dark:text-dark-text drop-shadow-[0_0_8px_rgba(0,255,255,0.3)]">What We Do</h2>
           <p className="mt-4 text-lg text-light-text-secondary dark:text-dark-text-secondary">
             We offer a comprehensive suite of services to bring your digital products to life.
@@ -76,9 +74,8 @@ const Home: React.FC = () => {
       </AnimatedSection>
       
        {/* Call to Action */}
-      <AnimatedSection className="bg-light-bg-secondary dark:bg-dark-bg-secondary relative">
-        <TechLogosBackground />
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center relative">
+      <AnimatedSection className="bg-light-bg-secondary dark:bg-dark-bg-secondary">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
             <h2 className="text-3xl font-bold tracking-tight">Have a project in mind?</h2>
             <p className="mt-4 text-lg text-light-text-secondary dark:text-dark-text-secondary">Let's build something amazing together.</p>
             <div className="mt-8">

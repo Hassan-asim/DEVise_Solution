@@ -86,7 +86,7 @@ const Chatbot: React.FC = () => {
                     <img src={logo} alt="Chatbot" className="w-full h-full rounded-full object-cover" />
                 </button>
             </div>
-            <div className={`fixed bottom-0 right-0 sm:m-4 h-full sm:h-[70vh] w-full sm:max-w-md shadow-2xl transition-transform duration-500 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full sm:translate-x-[120%]'} rounded-none sm:rounded-lg p-0.5 bg-gradient-to-br from-primary-DEFAULT via-secondary-DEFAULT to-primary-DEFAULT`}>
+            <div className={`fixed bottom-0 right-0 sm:m-4 h-[50vh] sm:h-[70vh] w-full sm:max-w-md shadow-2xl transition-transform duration-500 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full sm:translate-x-[120%]'} rounded-none sm:rounded-lg p-0.5 bg-gradient-to-br from-primary-DEFAULT via-secondary-DEFAULT to-primary-DEFAULT`}>
                  <div className="w-full h-full flex flex-col bg-light-bg dark:bg-dark-bg rounded-none sm:rounded-[5px] overflow-hidden">
                     <header className="flex items-center justify-between p-4 bg-charcoal text-white flex-shrink-0">
                         <div className="flex items-center gap-3">
