@@ -1,7 +1,7 @@
 
 import { Project } from '../types';
 
-const CACHE_KEY = 'projects-cache-v1';
+const CACHE_KEY = 'projects-cache-v2';
 const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
 
 function readClientCache(): Project[] | null {
@@ -26,12 +26,17 @@ function writeClientCache(payload: Project[]): void {
 }
 
 export const fetchProjects = async (): Promise<Project[]> => {
-	// client cache first
-	const cached = readClientCache();
-	if (cached) return cached;
+	const params = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
+	const refresh = params.get('refresh') === '1';
+
+	// client cache first unless refresh is requested
+	if (!refresh) {
+		const cached = readClientCache();
+		if (cached) return cached;
+	}
 
 	try {
-		const response = await fetch('/api/list-projects');
+		const response = await fetch(`/api/list-projects${refresh ? '?refresh=1' : ''}`);
 		if (!response.ok) {
 			throw new Error(await response.text());
 		}
