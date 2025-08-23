@@ -23,9 +23,9 @@ const GITHUB_USERNAME = process.env.GITHUB_USERNAME || 'Hassan-asim';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // optional for higher rate limits
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY; // optional for summarization/title
 
-const CACHE_FILE = '/tmp/projects-cache-v2.json';
+const CACHE_FILE = '/tmp/projects-cache-v3.json';
 const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
-const IMAGE_VERSION = '3';
+const IMAGE_VERSION = '4';
 
 const EXCLUDE_NAMES = new Set<string>(['DEVise_Solution', 'Hassan-asim']);
 const EXCLUDE_URLS = new Set<string>([
@@ -143,11 +143,25 @@ function extractTechKeywords(title: string, summary: string, tags: string[]): st
   return Array.from(new Set([...found, 'code','programming','syntax','terminal','editor','ide','screens']));
 }
 
-function imageForProject(id: number, title: string, summary: string, tags: string[], refresh?: boolean): string {
-  const terms = extractTechKeywords(title, summary, tags);
-  const q = encodeURIComponent(terms.join(','));
-  const v = `v=${IMAGE_VERSION}` + (refresh ? `&t=${Date.now()}` : '');
-  return `https://source.unsplash.com/featured/800x600?${q}&sig=${id}&${v}`;
+// Curated code/IDE/terminal-only Unsplash images (no laptops/scenery)
+const CODE_SNIPPET_IMAGES: string[] = [
+  'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1200&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1517433456452-f9633a875f6f?q=80&w=1200&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1526378722484-bd91ca387e72?q=80&w=1200&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?q=80&w=1200&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1200&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1200&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=1200&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1551033406-611cf9a28f67?q=80&w=1200&auto=format&fit=crop'
+];
+
+function imageForProject(id: number): string {
+  const idx = Math.abs(id) % CODE_SNIPPET_IMAGES.length;
+  const base = CODE_SNIPPET_IMAGES[idx];
+  // add cache-busting version and deterministic sig by id
+  return `${base}&v=${IMAGE_VERSION}&sig=${id}`;
 }
 
 function readCache(): { timestamp: number; payload: ProjectOut[] } | null {
@@ -189,7 +203,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         id: repo.id,
         name: title,
         description: summary,
-        media: [imageForProject(repo.id, title, summary, tags, refresh)],
+        media: [imageForProject(repo.id)],
         githubUrl: repo.html_url,
         tags,
       });
