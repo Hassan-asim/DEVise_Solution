@@ -19,7 +19,7 @@ const Contact: React.FC = () => {
                 {FOUNDERS.map(founder => (
                     <div key={founder.name} className="mb-4">
                         <h3 className="font-semibold text-white dark:text-charcoal">{founder.name}</h3>
-                        <a href={`mailto:${founder.email}`} className="text-primary-DEFAULT hover:underline">{founder.email}</a>
+                        <a href={`mailto:${founder.email}`} className="text-primary-DEFAULT hover:underline font-semibold text-white dark:text-charcoal">{founder.email}</a>
                     </div>
                 ))}
                 <p className="mt-8 text-sm text-white dark:text-charcoal">
