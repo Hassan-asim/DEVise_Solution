@@ -34,27 +34,6 @@ const EXCLUDE_URLS = new Set<string>([
   'https://github.com/Hassan-asim/Hassan-asim.git',
 ]);
 
-// Curated coding/terminal/IDE themed Unsplash images (direct static links)
-const CODE_IMAGES: string[] = [
-  'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1200&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1200&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1517433456452-f9633a875f6f?q=80&w=1200&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1200&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1510511233900-1982d92bd835?q=80&w=1200&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?q=80&w=1200&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1526378722484-bd91ca387e72?q=80&w=1200&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?q=80&w=1200&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1200&auto=format&fit=crop'
-];
-
-function codeImageFor(seed: number): string {
-  const idx = Math.abs(seed) % CODE_IMAGES.length;
-  return CODE_IMAGES[idx];
-}
-
 async function fetchRepos(): Promise<Repo[]> {
   const url = `https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`;
   const res = await fetch(url, {
@@ -128,11 +107,46 @@ async function summarize(name: string, description: string | null): Promise<stri
 function pickTags(name: string, description: string): string[] {
   const text = `${name} ${description}`.toLowerCase();
   const tags = new Set<string>();
-  if (/(react|vite|next|typescript|javascript)/.test(text)) tags.add('Web');
-  if (/(node|api|express|server)/.test(text)) tags.add('Backend');
-  if (/(ai|ml|model|gemini|pytorch|tensorflow)/.test(text)) tags.add('AI/ML');
-  if (/(mobile|react native|android|ios)/.test(text)) tags.add('Mobile');
+  const addIf = (re: RegExp, t: string) => { if (re.test(text)) tags.add(t); };
+  addIf(/react|vite|next|typescript|javascript|html|css|tailwind/, 'Web');
+  addIf(/node|express|api|server|fastapi|flask|django/, 'Backend');
+  addIf(/ai|ml|model|gemini|pytorch|tensorflow|opencv|nlp|vision/, 'AI/ML');
+  addIf(/mobile|react native|android|ios|flutter/, 'Mobile');
+  addIf(/data|pipeline|etl|pandas|numpy|matplotlib|notebook/, 'Data');
   return Array.from(tags).length ? Array.from(tags) : ['Project'];
+}
+
+function extractTechKeywords(title: string, summary: string, tags: string[]): string[] {
+  const base = `${title} ${summary}`.toLowerCase();
+  const found: string[] = [];
+  const dict: Record<string, string[]> = {
+    javascript: ['javascript','js','node','express','vite','next','react'],
+    typescript: ['typescript','ts'],
+    python: ['python','flask','django','fastapi','pandas','numpy','matplotlib','jupyter'],
+    java: ['java','spring'],
+    csharp: ['c#','dotnet','csharp'],
+    cpp: ['c++','cpp'],
+    go: ['go','golang'],
+    php: ['php','laravel'],
+    ruby: ['ruby','rails'],
+    web: ['html','css','frontend','web','ui','tailwind'],
+    ai: ['ai','ml','machine learning','deep learning','pytorch','tensorflow','opencv','vision','nlp'],
+    mobile: ['android','ios','react native','flutter'],
+    backend: ['api','server','backend','microservice'],
+    db: ['postgres','mysql','mongodb','redis','sql']
+  };
+  for (const [key, terms] of Object.entries(dict)) {
+    if (terms.some(t => base.includes(t))) found.push(key);
+  }
+  // bias to code visuals
+  return Array.from(new Set([...found, 'code','programming','syntax','terminal','editor','ide','screens']));
+}
+
+function imageForProject(id: number, title: string, summary: string, tags: string[]): string {
+  const terms = extractTechKeywords(title, summary, tags);
+  const q = encodeURIComponent(terms.join(','));
+  // deterministic seed by repo id to reduce flicker; use Unsplash Source featured endpoint
+  return `https://source.unsplash.com/featured/800x600?${q}&sig=${id}`;
 }
 
 function readCache(): { timestamp: number; payload: ProjectOut[] } | null {
@@ -174,7 +188,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         id: repo.id,
         name: title,
         description: summary,
-        media: [codeImageFor(repo.id)],
+        media: [imageForProject(repo.id, title, summary, tags)],
         githubUrl: repo.html_url,
         tags,
       });
