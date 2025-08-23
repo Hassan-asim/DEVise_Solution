@@ -10,6 +10,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
                 <img src={project.media[0]} alt={project.name} className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
             <div className="p-6">
+                <div className="text-xs font-semibold uppercase tracking-wide text-light-text-secondary dark:text-dark-text-secondary mb-1">Tech stack</div>
                 <div className="flex flex-wrap gap-2 mb-4">
                     {project.tags.map(tag => (
                         <span key={tag} className="px-3 py-1 text-xs font-semibold text-dark-bg bg-gradient-to-r from-primary-light to-primary-dark rounded-full">
