@@ -10,7 +10,8 @@ export default async function handler(
     const blogDirectory = path.join(process.cwd(), 'blog');
     const files = fs.readdirSync(blogDirectory);
     const markdownFiles = files.filter(file => file.endsWith('.md'));
-    
+
+    response.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=300');
     return response.status(200).json({ files: markdownFiles });
   } catch (error) {
     console.error(error);
