@@ -67,9 +67,9 @@ const TechLogosBackground: React.FC = () => {
 	const boundsRef = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
 
 	const items = useMemo(() => {
-		// render up to 36 items for performance
-		const count = Math.min(36, logos.length);
-		return Array.from({ length: count }, (_, i) => logos[i % logos.length]);
+		// duplicate every logo at least twice for saturation
+		const duplicated = [...logos, ...logos];
+		return duplicated;
 	}, []);
 
 	useEffect(() => {
@@ -89,7 +89,7 @@ const TechLogosBackground: React.FC = () => {
 		const maxAttempts = 1000;
 		imgRefs.current.forEach((el) => {
 			if (!el) return;
-			const r = rand(14, 28);
+			const r = rand(16, 30);
 			let attempts = 0;
 			let x = 0, y = 0;
 			while (attempts++ < maxAttempts) {
@@ -102,7 +102,7 @@ const TechLogosBackground: React.FC = () => {
 				}
 				if (ok) break;
 			}
-			const speed = rand(40, 90); // px/sec (faster)
+			const speed = rand(70, 120); // faster px/sec
 			const angle = rand(0, Math.PI * 2);
 			const vx = Math.cos(angle) * speed;
 			const vy = Math.sin(angle) * speed;
@@ -118,7 +118,7 @@ const TechLogosBackground: React.FC = () => {
 
 		let last = performance.now();
 		const step = (now: number) => {
-			const dt = Math.min(0.05, (now - last) / 1000); // cap dt
+			const dt = Math.min(0.05, (now - last) / 1000);
 			last = now;
 			const { w, h } = boundsRef.current;
 			const arr = bubblesRef.current;
@@ -134,7 +134,7 @@ const TechLogosBackground: React.FC = () => {
 				if (b.y - b.r < 0) { b.y = b.r; b.vy *= -1; }
 				if (b.y + b.r > h) { b.y = h - b.r; b.vy *= -1; }
 			}
-			// simple pairwise collision resolve (repel & swap velocity components)
+			// collisions
 			for (let i = 0; i < arr.length; i++) {
 				for (let j = i + 1; j < arr.length; j++) {
 					const a = arr[i], c = arr[j];
@@ -142,12 +142,10 @@ const TechLogosBackground: React.FC = () => {
 					const dist = Math.hypot(dx, dy);
 					const minDist = a.r + c.r + 2;
 					if (dist > 0 && dist < minDist) {
-						// push apart
 						const overlap = (minDist - dist) / 2;
 						const nx = dx / dist, ny = dy / dist;
 						a.x -= nx * overlap; a.y -= ny * overlap;
 						c.x += nx * overlap; c.y += ny * overlap;
-						// bounce (swap normal components)
 						const vaN = a.vx * nx + a.vy * ny;
 						const vcN = c.vx * nx + c.vy * ny;
 						const diff = vcN - vaN;

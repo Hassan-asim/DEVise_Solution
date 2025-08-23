@@ -10,6 +10,12 @@ const CloseIcon = () => (
     </svg>
 );
 
+const BackIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+    </svg>
+);
+
 const Chatbot: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -83,8 +89,13 @@ const Chatbot: React.FC = () => {
             <div className={`fixed bottom-0 right-0 sm:m-4 h-full sm:h-[70vh] w-full sm:max-w-md shadow-2xl transition-transform duration-500 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full sm:translate-x-[120%]'} rounded-none sm:rounded-lg p-0.5 bg-gradient-to-br from-primary-DEFAULT via-secondary-DEFAULT to-primary-DEFAULT`}>
                  <div className="w-full h-full flex flex-col bg-light-bg dark:bg-dark-bg rounded-none sm:rounded-[5px] overflow-hidden">
                     <header className="flex items-center justify-between p-4 bg-charcoal text-white flex-shrink-0">
-                        <h3 className="text-lg font-semibold">DEVise Assistant</h3>
-                        <button onClick={() => setIsOpen(false)} aria-label="Close chat">
+                        <div className="flex items-center gap-3">
+                            <button onClick={() => setIsOpen(false)} aria-label="Back" className="sm:hidden inline-flex">
+                                <BackIcon />
+                            </button>
+                            <h3 className="text-lg font-semibold">DEVise Assistant</h3>
+                        </div>
+                        <button onClick={() => setIsOpen(false)} aria-label="Close chat" className="hidden sm:inline-flex">
                             <CloseIcon />
                         </button>
                     </header>

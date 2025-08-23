@@ -1,5 +1,7 @@
 import React from 'react';
 import { Founder, Service } from './types';
+import SufiImg from './components/sufi_hassan_asim.png';
+import HassanImg from './components/hassan_ali_sajid.png';
 
 export const NAV_LINKS = [
   { name: 'Home', path: '/' },
@@ -19,7 +21,7 @@ export const FOUNDERS: Founder[] = [
     phone: '0330-5241433',
     linkedin: 'https://www.linkedin.com/in/sufi-hassan-asim',
     github: 'https://github.com/Hassan-Asim',
-    image: '/components/sufi_hassan_asim.png',
+    image: SufiImg,
   },
   {
     name: 'Hassan Ali Sajid',
@@ -27,7 +29,7 @@ export const FOUNDERS: Founder[] = [
     phone: '03008070639',
     linkedin: 'https://www.linkedin.com/in/hassan-ali-sajid',
     github: 'https://github.com/HassanAliSajid',
-    image: '/components/hassan_ali_sajid.png',
+    image: HassanImg,
   },
 ];
 
@@ -40,7 +42,7 @@ const CodeBracketSquareIcon = () => (
 const CpuChipIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-12 h-12 text-white dark:text-dark-bg">
         <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 21v-1.5M15.75 3v1.5m0 16.5v-1.5m3.75-12H21m-3.75 0h1.5m-1.5 0H21m-3.75 0h1.5m-1.5 4.5H21m-3.75 0h1.5m-1.5 0H21m-3.75 0h1.5m-1.5 4.5H21m-3.75 0h1.5M12 21v-1.5m0-16.5V3" />
-        <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 6.375a1.5 1.5 0 0 0-1.5 1.5v1.5m1.5-3v3m0 0a1.5 1.5 0 0 1-1.5 1.5v1.5m1.5-3v3m0 0a1.5 1.5 0 0 1-1.5 1.5v1.5m1.5-3v3M12 5.25a1.5 1.5 0 0 0-1.5 1.5v12a1.5 1.5 0 0 0 1.5 1.5m0-15a1.5 1.5 0 0 1 1.5 1.5v12a1.5 1.5 0 0 1-1.5 1.5m0-15V3.75m0 16.5V21m6-15.75a1.5 1.5 0 0 0-1.5 1.5v1.5m1.5-3v3m0 0a1.5 1.5 0 0 1-1.5 1.5v1.5m1.5-3v3" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 6.375a1.5 1.5 0 0 0-1.5 1.5v1.5m1.5-3v3m0 0a1.5 1.5 0 0 1-1.5 1.5v1.5m1.5-3v3m0 0a1.5 1.5 0 0 1-1.5 1.5v1.5m1.5-3v3M12 5.25a1.5 1.5 0 0 0-1.5 1.5v12a1.5 1.5 0 0 0 1.5 1.5m0-15a1.5 1.5 0 0 1 1.5 1.5v12a1.5 1.5 0 0 1-1.5 1.5m0-15V3.75m0 16.5V21" />
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 8.25h.008v.008H12V8.25Zm0 3.75h.008v.008H12v-.008Zm0 3.75h.008v.008H12v-.008Z" />
     </svg>
 );
