@@ -7,18 +7,19 @@ import TechLogosBackground from '../components/TechLogosBackground';
 
 const Home: React.FC = () => {
   return (
-    <div className="relative space-y-16 md:space-y-24">
-      <TechLogosBackground />
+    <div className="space-y-16 md:space-y-24">
       {/* Hero Section */}
       <section 
         className="relative py-40 md:py-56 lg:py-64 bg-cover bg-center"
         style={{ backgroundImage: `url(${banner})` }}
       >
         <div className="absolute inset-0 bg-black/30"></div>
+        <TechLogosBackground />
       </section>
 
       <section className="py-16 md:py-24 relative">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <TechLogosBackground />
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
           <AnimatedSection className="text-center">
             <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-light-text dark:text-dark-text">
               DEV<span className="text-primary-DEFAULT">ise</span> Solutions
@@ -46,7 +47,8 @@ const Home: React.FC = () => {
 
       {/* Services Overview */}
       <AnimatedSection className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <div className="text-center">
+        <TechLogosBackground />
+        <div className="text-center relative">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-light-text dark:text-dark-text drop-shadow-[0_0_8px_rgba(0,255,255,0.3)]">What We Do</h2>
           <p className="mt-4 text-lg text-light-text-secondary dark:text-dark-text-secondary">
             We offer a comprehensive suite of services to bring your digital products to life.
@@ -75,7 +77,8 @@ const Home: React.FC = () => {
       
        {/* Call to Action */}
       <AnimatedSection className="bg-light-bg-secondary dark:bg-dark-bg-secondary relative">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+        <TechLogosBackground />
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center relative">
             <h2 className="text-3xl font-bold tracking-tight">Have a project in mind?</h2>
             <p className="mt-4 text-lg text-light-text-secondary dark:text-dark-text-secondary">Let's build something amazing together.</p>
             <div className="mt-8">

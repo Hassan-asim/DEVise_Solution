@@ -67,6 +67,7 @@ const TechLogosBackground: React.FC = () => {
 	const boundsRef = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
 
 	const items = useMemo(() => {
+		// duplicate every logo at least twice for saturation
 		const duplicated = [...logos, ...logos];
 		return duplicated;
 	}, []);
@@ -76,59 +77,44 @@ const TechLogosBackground: React.FC = () => {
 		if (!container) return;
 
 		const measure = () => {
-			const w = container.clientWidth;
-			const h = Math.max(container.scrollHeight, container.clientHeight);
-			boundsRef.current = { w, h };
-			container.style.height = `${h}px`;
+			const rect = container.getBoundingClientRect();
+			boundsRef.current = { w: rect.width, h: rect.height };
 		};
 		measure();
 		const onResize = () => measure();
 		window.addEventListener('resize', onResize);
 
 		// seed bubbles with no initial overlap (simple attempts)
-		const seed = () => {
-			const bubbles: Bubble[] = [];
-			const maxAttempts = 1000;
-			imgRefs.current.forEach((el) => {
-				if (!el) return;
-				const r = rand(16, 30);
-				let attempts = 0;
-				let x = 0, y = 0;
-				while (attempts++ < maxAttempts) {
-					x = rand(r, boundsRef.current.w - r);
-					y = rand(r, boundsRef.current.h - r);
-					let ok = true;
-					for (const b of bubbles) {
-						const dx = x - b.x, dy = y - b.y;
-						if (Math.hypot(dx, dy) < r + b.r + 6) { ok = false; break; }
-					}
-					if (ok) break;
+		const bubbles: Bubble[] = [];
+		const maxAttempts = 1000;
+		imgRefs.current.forEach((el) => {
+			if (!el) return;
+			const r = rand(16, 30);
+			let attempts = 0;
+			let x = 0, y = 0;
+			while (attempts++ < maxAttempts) {
+				x = rand(r, boundsRef.current.w - r);
+				y = rand(r, boundsRef.current.h - r);
+				let ok = true;
+				for (const b of bubbles) {
+					const dx = x - b.x, dy = y - b.y;
+					if (Math.hypot(dx, dy) < r + b.r + 6) { ok = false; break; }
 				}
-				const speed = rand(70, 120);
-				const angle = rand(0, Math.PI * 2);
-				const vx = Math.cos(angle) * speed;
-				const vy = Math.sin(angle) * speed;
-				el.style.width = `${r * 2}px`;
-				el.style.height = `${r * 2}px`;
-				el.style.left = `${x - r}px`;
-				el.style.top = `${y - r}px`;
-				el.style.transform = `translate3d(0,0,0)`;
-				el.style.filter = 'grayscale(100%)';
-				bubbles.push({ el, x, y, vx, vy, r });
-			});
-			bubblesRef.current = bubbles;
-		};
-
-		seed();
-
-		// after layout/content settles, re-measure and re-seed once to spread across full height
-		const settleTimer = window.setTimeout(() => {
-			const before = boundsRef.current.h;
-			measure();
-			if (boundsRef.current.h > before + 200) {
-				seed();
+				if (ok) break;
 			}
-		}, 800);
+			const speed = rand(70, 120); // faster px/sec
+			const angle = rand(0, Math.PI * 2);
+			const vx = Math.cos(angle) * speed;
+			const vy = Math.sin(angle) * speed;
+			el.style.width = `${r * 2}px`;
+			el.style.height = `${r * 2}px`;
+			el.style.left = `${x - r}px`;
+			el.style.top = `${y - r}px`;
+			el.style.transform = `translate3d(0,0,0)`;
+			el.style.filter = 'grayscale(100%)';
+			bubbles.push({ el, x, y, vx, vy, r });
+		});
+		bubblesRef.current = bubbles;
 
 		let last = performance.now();
 		const step = (now: number) => {
@@ -137,15 +123,18 @@ const TechLogosBackground: React.FC = () => {
 			const { w, h } = boundsRef.current;
 			const arr = bubblesRef.current;
 
+			// integrate
 			for (let i = 0; i < arr.length; i++) {
 				const b = arr[i];
 				b.x += b.vx * dt;
 				b.y += b.vy * dt;
+				// wall bounce
 				if (b.x - b.r < 0) { b.x = b.r; b.vx *= -1; }
 				if (b.x + b.r > w) { b.x = w - b.r; b.vx *= -1; }
 				if (b.y - b.r < 0) { b.y = b.r; b.vy *= -1; }
 				if (b.y + b.r > h) { b.y = h - b.r; b.vy *= -1; }
 			}
+			// collisions
 			for (let i = 0; i < arr.length; i++) {
 				for (let j = i + 1; j < arr.length; j++) {
 					const a = arr[i], c = arr[j];
@@ -165,6 +154,7 @@ const TechLogosBackground: React.FC = () => {
 					}
 				}
 			}
+			// draw
 			for (const b of arr) {
 				b.el.style.transform = `translate3d(${b.x - b.r}px, ${b.y - b.r}px, 0)`;
 			}
@@ -175,7 +165,6 @@ const TechLogosBackground: React.FC = () => {
 		return () => {
 			if (rafRef.current) cancelAnimationFrame(rafRef.current);
 			window.removeEventListener('resize', onResize);
-			clearTimeout(settleTimer);
 		};
 	}, [items.length]);
 
