@@ -1,21 +1,68 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FOUNDERS } from '../constants';
+import { sendContactEmail, sendEmailFallback, validateContactForm, ContactFormData } from '../services/gmailService';
 
 const Footer: React.FC = () => {
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [formData, setFormData] = useState<ContactFormData>({ name: '', email: '', message: '' });
   const [status, setStatus] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState<string[]>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    // Clear errors when user starts typing
+    if (errors.length > 0) {
+      setErrors([]);
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would send an email or call a backend service.
-    console.log('Form submitted:', formData);
-    setStatus('Thank you for your message! We will get back to you soon.');
-    setFormData({ name: '', email: '', message: '' });
+    setIsLoading(true);
+    setStatus('');
+    setErrors([]);
+
+    try {
+      // Validate form data
+      const validation = validateContactForm(formData);
+      if (!validation.isValid) {
+        setErrors(validation.errors);
+        setIsLoading(false);
+        return;
+      }
+
+      // Send email via Gmail API
+      const result = await sendContactEmail(formData);
+
+      if (result.success) {
+        setStatus(result.message);
+        setFormData({ name: '', email: '', message: '' });
+        // Clear success message after 8 seconds
+        setTimeout(() => setStatus(''), 8000);
+      } else {
+        setErrors([result.message]);
+      }
+
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setErrors(['An unexpected error occurred. Please try again.']);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleEmailFallback = () => {
+    // Validate first
+    const validation = validateContactForm(formData);
+    if (!validation.isValid) {
+      setErrors(validation.errors);
+      return;
+    }
+
+    // Use mailto fallback
+    sendEmailFallback(formData);
+    setStatus('Opening your email client... Please send the email from there.');
     setTimeout(() => setStatus(''), 5000);
   };
 
@@ -82,14 +129,64 @@ const Footer: React.FC = () => {
                 required
                 className="w-full px-4 py-2 bg-light-bg dark:bg-dark-bg border border-slate-300 dark:border-slate-700 rounded-md focus:ring-2 focus:ring-primary-DEFAULT focus:border-transparent transition"
               ></textarea>
-              <div className="flex justify-between items-center">
-                 <button
-                  type="submit"
-                  className="inline-block px-8 py-3 bg-light-bg-secondary dark:bg-dark-bg-secondary font-semibold rounded-md shadow-lg hover:ring-2 hover:ring-primary-DEFAULT transition-all transform hover:scale-105"
-                >
-                  Send Message
-                </button>
-                {status && <p className="text-sm text-green-600 dark:text-green-400">{status}</p>}
+                            <div className="space-y-4">
+                {/* Error Messages */}
+                {errors.length > 0 && (
+                  <div className="p-3 bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-600 rounded-md">
+                    <ul className="text-sm text-red-700 dark:text-red-300 space-y-1">
+                      {errors.map((error, index) => (
+                        <li key={index}>• {error}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Success Message */}
+                {status && (
+                  <div className="p-3 bg-green-100 dark:bg-green-900/30 border border-green-400 dark:border-green-600 rounded-md">
+                    <p className="text-sm text-green-700 dark:text-green-300">{status}</p>
+                  </div>
+                )}
+
+                {/* Submit Buttons */}
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className={`flex-1 px-6 py-3 font-semibold rounded-md shadow-lg transition-all transform hover:scale-105 ${
+                      isLoading
+                        ? 'bg-gray-400 cursor-not-allowed'
+                        : 'bg-gradient-to-r from-primary-dark to-secondary-dark text-white hover:ring-2 hover:ring-primary-DEFAULT'
+                    }`}
+                  >
+                    {isLoading ? (
+                      <span className="flex items-center justify-center">
+                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Sending...
+                      </span>
+                    ) : (
+                      'Send via Gmail'
+                    )}
+                  </button>
+                  
+                  <button
+                    type="button"
+                    onClick={handleEmailFallback}
+                    className="px-6 py-3 bg-light-bg dark:bg-dark-bg-secondary font-semibold rounded-md shadow-lg text-light-text dark:text-dark-text hover:ring-2 hover:ring-primary-DEFAULT transition-all transform hover:scale-105 border border-slate-300 dark:border-slate-600"
+                  >
+                    Use Email Client
+                  </button>
+                </div>
+
+                <p className="text-xs text-light-text-secondary dark:text-dark-text-secondary">
+                  Having trouble? Try the "Use Email Client" option or contact us directly at{' '}
+                  <a href="mailto:team@devisesolutions.co" className="text-primary-dark dark:text-primary-light hover:underline">
+                    team@devisesolutions.co
+                  </a>
+                </p>
               </div>
             </form>
           </div>
