@@ -109,14 +109,23 @@ function pickTags(name: string, description: string): string[] {
   const tags = new Set<string>();
   if (/(react|vite|next|typescript|javascript)/.test(text)) tags.add('Web');
   if (/(node|api|express|server)/.test(text)) tags.add('Backend');
-  if (/(ai|ml|model|gemini)/.test(text)) tags.add('AI/ML');
+  if (/(ai|ml|model|gemini|pytorch|tensorflow)/.test(text)) tags.add('AI/ML');
   if (/(mobile|react native|android|ios)/.test(text)) tags.add('Mobile');
   return Array.from(tags).length ? Array.from(tags) : ['Project'];
 }
 
-function unsplashFor(name: string, title: string): string {
-  const q = encodeURIComponent((title || name).split('-').join(' '));
-  return `https://source.unsplash.com/featured/800x600?${q}`; // free random image by query
+function unsplashFor(name: string, title: string, tags: string[], description?: string): string {
+  const baseKeywords = ['software', 'programming', 'developer', 'code', 'technology', 'app', 'web', 'digital', 'tech'];
+  const tagKeywords = tags.map(t => t.toLowerCase());
+  const words = `${title} ${name} ${description || ''}`
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 6); // limit noise
+  const all = Array.from(new Set([...words, ...tagKeywords, ...baseKeywords]));
+  const q = encodeURIComponent(all.join(','));
+  return `https://source.unsplash.com/featured/800x600?${q}`;
 }
 
 function readCache(): { timestamp: number; payload: ProjectOut[] } | null {
@@ -152,13 +161,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     for (const repo of repos) {
       const title = await generateTitle(repo.name, repo.description);
       const summary = await summarize(repo.name, repo.description);
+      const tags = pickTags(title, summary);
       projects.push({
         id: repo.id,
         name: title,
         description: summary,
-        media: [unsplashFor(repo.name, title)],
+        media: [unsplashFor(repo.name, title, tags, summary)],
         githubUrl: repo.html_url,
-        tags: pickTags(title, summary),
+        tags,
       });
     }
 

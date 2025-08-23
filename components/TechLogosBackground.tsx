@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 
 const logos = [
 	// AI / Data stack
@@ -48,45 +48,139 @@ const logos = [
 	'https://raw.githubusercontent.com/devicons/devicon/master/icons/vscode/vscode-original-wordmark.svg',
 ];
 
-const random = (min: number, max: number) => Math.random() * (max - min) + min;
+interface Bubble {
+	el: HTMLImageElement;
+	x: number;
+	y: number;
+	vx: number;
+	vy: number;
+	r: number;
+}
+
+const rand = (min: number, max: number) => Math.random() * (max - min) + min;
 
 const TechLogosBackground: React.FC = () => {
-	return (
-		<div className="pointer-events-none absolute inset-0 overflow-hidden opacity-20">
-			<div className="absolute inset-0" style={{ transform: 'translateZ(0)' }}>
-				{Array.from({ length: 42 }).map((_, i) => {
-					const logo = logos[i % logos.length];
-					const left = random(0, 90);
-					const top = random(0, 90);
-					const size = random(28, 56);
-					const duration = random(16, 32);
-					const delay = random(0, 14);
-					const rotate = random(-12, 12);
-					return (
-						<img
-							key={i}
-							src={logo}
-							alt="tech"
-							style={{
-								position: 'absolute',
-								left: `${left}%`,
-								top: `${top}%`,
-								width: size,
-								height: size,
-								animation: `floatDrift ${duration}s ease-in-out ${delay}s infinite alternate`,
-								filter: 'grayscale(100%)',
-								transform: `rotate(${rotate}deg)`
-							}}
-						/>
-					);
-				})}
-			</div>
-			<style>{`
-			@keyframes floatDrift {
-				0% { transform: translate(0px, 0px) scale(1) rotate(0deg); }
-				100% { transform: translate(24px, -28px) scale(1.06) rotate(6deg); }
+	const containerRef = useRef<HTMLDivElement>(null);
+	const imgRefs = useRef<Array<HTMLImageElement | null>>([]);
+	const bubblesRef = useRef<Bubble[]>([]);
+	const rafRef = useRef<number | null>(null);
+	const boundsRef = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
+
+	const items = useMemo(() => {
+		// render up to 36 items for performance
+		const count = Math.min(36, logos.length);
+		return Array.from({ length: count }, (_, i) => logos[i % logos.length]);
+	}, []);
+
+	useEffect(() => {
+		const container = containerRef.current;
+		if (!container) return;
+
+		const measure = () => {
+			const rect = container.getBoundingClientRect();
+			boundsRef.current = { w: rect.width, h: rect.height };
+		};
+		measure();
+		const onResize = () => measure();
+		window.addEventListener('resize', onResize);
+
+		// seed bubbles with no initial overlap (simple attempts)
+		const bubbles: Bubble[] = [];
+		const maxAttempts = 1000;
+		imgRefs.current.forEach((el) => {
+			if (!el) return;
+			const r = rand(14, 28);
+			let attempts = 0;
+			let x = 0, y = 0;
+			while (attempts++ < maxAttempts) {
+				x = rand(r, boundsRef.current.w - r);
+				y = rand(r, boundsRef.current.h - r);
+				let ok = true;
+				for (const b of bubbles) {
+					const dx = x - b.x, dy = y - b.y;
+					if (Math.hypot(dx, dy) < r + b.r + 6) { ok = false; break; }
+				}
+				if (ok) break;
 			}
-			`}</style>
+			const speed = rand(40, 90); // px/sec (faster)
+			const angle = rand(0, Math.PI * 2);
+			const vx = Math.cos(angle) * speed;
+			const vy = Math.sin(angle) * speed;
+			el.style.width = `${r * 2}px`;
+			el.style.height = `${r * 2}px`;
+			el.style.left = `${x - r}px`;
+			el.style.top = `${y - r}px`;
+			el.style.transform = `translate3d(0,0,0)`;
+			el.style.filter = 'grayscale(100%)';
+			bubbles.push({ el, x, y, vx, vy, r });
+		});
+		bubblesRef.current = bubbles;
+
+		let last = performance.now();
+		const step = (now: number) => {
+			const dt = Math.min(0.05, (now - last) / 1000); // cap dt
+			last = now;
+			const { w, h } = boundsRef.current;
+			const arr = bubblesRef.current;
+
+			// integrate
+			for (let i = 0; i < arr.length; i++) {
+				const b = arr[i];
+				b.x += b.vx * dt;
+				b.y += b.vy * dt;
+				// wall bounce
+				if (b.x - b.r < 0) { b.x = b.r; b.vx *= -1; }
+				if (b.x + b.r > w) { b.x = w - b.r; b.vx *= -1; }
+				if (b.y - b.r < 0) { b.y = b.r; b.vy *= -1; }
+				if (b.y + b.r > h) { b.y = h - b.r; b.vy *= -1; }
+			}
+			// simple pairwise collision resolve (repel & swap velocity components)
+			for (let i = 0; i < arr.length; i++) {
+				for (let j = i + 1; j < arr.length; j++) {
+					const a = arr[i], c = arr[j];
+					const dx = c.x - a.x, dy = c.y - a.y;
+					const dist = Math.hypot(dx, dy);
+					const minDist = a.r + c.r + 2;
+					if (dist > 0 && dist < minDist) {
+						// push apart
+						const overlap = (minDist - dist) / 2;
+						const nx = dx / dist, ny = dy / dist;
+						a.x -= nx * overlap; a.y -= ny * overlap;
+						c.x += nx * overlap; c.y += ny * overlap;
+						// bounce (swap normal components)
+						const vaN = a.vx * nx + a.vy * ny;
+						const vcN = c.vx * nx + c.vy * ny;
+						const diff = vcN - vaN;
+						a.vx += diff * nx; a.vy += diff * ny;
+						c.vx -= diff * nx; c.vy -= diff * ny;
+					}
+				}
+			}
+			// draw
+			for (const b of arr) {
+				b.el.style.transform = `translate3d(${b.x - b.r}px, ${b.y - b.r}px, 0)`;
+			}
+			rafRef.current = requestAnimationFrame(step);
+		};
+		rafRef.current = requestAnimationFrame(step);
+
+		return () => {
+			if (rafRef.current) cancelAnimationFrame(rafRef.current);
+			window.removeEventListener('resize', onResize);
+		};
+	}, [items.length]);
+
+	return (
+		<div ref={containerRef} className="pointer-events-none absolute inset-0 overflow-hidden opacity-25">
+			{items.map((src, i) => (
+				<img
+					key={i}
+					src={src}
+					alt="tech"
+					ref={(el) => (imgRefs.current[i] = el)}
+					style={{ position: 'absolute', willChange: 'transform' }}
+				/>
+			))}
 		</div>
 	);
 };
