@@ -26,6 +26,14 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY; // optional for summarization
 const CACHE_FILE = '/tmp/projects-cache.json';
 const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
 
+const EXCLUDE_NAMES = new Set<string>(['DEVise_Solution', 'Hassan-asim']);
+const EXCLUDE_URLS = new Set<string>([
+  'https://github.com/Hassan-asim/DEVise_Solution',
+  'https://github.com/Hassan-asim/DEVise_Solution.git',
+  'https://github.com/Hassan-asim/Hassan-asim',
+  'https://github.com/Hassan-asim/Hassan-asim.git',
+]);
+
 async function fetchRepos(): Promise<Repo[]> {
   const url = `https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`;
   const res = await fetch(url, {
@@ -34,7 +42,8 @@ async function fetchRepos(): Promise<Repo[]> {
   if (!res.ok) {
     throw new Error(`GitHub API failed: ${res.status} ${await res.text()}`);
   }
-  return res.json();
+  const repos: Repo[] = await res.json();
+  return repos.filter(r => !EXCLUDE_NAMES.has(r.name) && !EXCLUDE_URLS.has(r.html_url));
 }
 
 function basicTitleFromRepoName(repoName: string): string {
@@ -53,7 +62,7 @@ async function generateTitle(name: string, description: string | null): Promise<
   const fallback = basicTitleFromRepoName(name) || name;
   if (!GEMINI_API_KEY) return fallback;
   try {
-    const prompt = `Create a short, catchy product-style project title (3-6 words, Title Case) from this repository context. Avoid generic words like Repo/App/Project.\n\nRepo name: ${name}\nDescription: ${description || ''}`;
+    const prompt = `You are naming a software project for a portfolio card. Return ONLY ONE short, catchy Title Case name (3-6 words). Do not include bullets, numbering, quotes, code fences, or multiple options. Avoid generic words like Repo/App/Project.\n\nRepo name: ${name}\nDescription: ${description || ''}`;
     const resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + GEMINI_API_KEY, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -62,7 +71,8 @@ async function generateTitle(name: string, description: string | null): Promise<
     if (!resp.ok) throw new Error(await resp.text());
     const data = await resp.json();
     const text: string = (data?.candidates?.[0]?.content?.parts?.[0]?.text || '').trim();
-    return text || fallback;
+    const singleLine = text.split('\n')[0].replace(/^[-*\d.\s]+/, '').replace(/"/g, '').trim();
+    return singleLine || fallback;
   } catch {
     return fallback;
   }
@@ -78,7 +88,8 @@ async function summarize(name: string, description: string | null): Promise<stri
   }
 
   try {
-    const prompt = `Write a concise, friendly 1-2 sentence description for a portfolio card based on this repository. Focus on outcomes and tech if mentioned.\n\nRepo name: ${name}\nDetails: ${base}`;
+    const prompt = `Write a concise, friendly 1-2 sentence description for a portfolio card based on this repository. Focus on outcomes and tech if mentioned.` +
+      ` Return a single paragraph, no lists or markdown.\n\nRepo name: ${name}\nDetails: ${base}`;
     const resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + GEMINI_API_KEY, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -87,7 +98,7 @@ async function summarize(name: string, description: string | null): Promise<stri
     if (!resp.ok) throw new Error(await resp.text());
     const data = await resp.json();
     const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || base;
-    return text.trim();
+    return text.replace(/\n+/g, ' ').trim();
   } catch {
     return base;
   }

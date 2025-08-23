@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchProjects } from '../services/githubService';
 import { Project } from '../types';
 import AnimatedSection from '../components/AnimatedSection';
+import TechLogosBackground from '../components/TechLogosBackground';
 
 const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
     return (
@@ -58,26 +59,29 @@ const Projects: React.FC = () => {
     }, []);
 
     return (
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-            <AnimatedSection className="text-center">
-                <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary-dark to-secondary-dark dark:from-primary-light dark:to-secondary-light">Our Portfolio</h1>
-                <p className="mt-4 max-w-3xl mx-auto text-lg text-light-text-secondary dark:text-dark-text-secondary">
-                    A selection of projects that showcase our skills, creativity, and commitment to quality.
-                </p>
-            </AnimatedSection>
-            
-            <div className="mt-16">
-                {loading ? (
-                    <div className="text-center">Loading projects...</div>
-                ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-                        {projects.map((project, index) => (
-                            <AnimatedSection key={project.id}>
-                                <ProjectCard project={project} />
-                            </AnimatedSection>
-                        ))}
-                    </div>
-                )}
+        <div className="relative">
+            <TechLogosBackground />
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative">
+                <AnimatedSection className="text-center">
+                    <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary-dark to-secondary-dark dark:from-primary-light dark:to-secondary-light">Our Portfolio</h1>
+                    <p className="mt-4 max-w-3xl mx-auto text-lg text-light-text-secondary dark:text-dark-text-secondary">
+                        A selection of projects that showcase our skills, creativity, and commitment to quality.
+                    </p>
+                </AnimatedSection>
+                
+                <div className="mt-16">
+                    {loading ? (
+                        <div className="text-center">Loading projects...</div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+                            {projects.map((project, index) => (
+                                <AnimatedSection key={project.id}>
+                                    <ProjectCard project={project} />
+                                </AnimatedSection>
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );
